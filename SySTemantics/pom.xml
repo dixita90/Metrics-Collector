@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.MSCS_710L</groupId>
     <artifactId>SySTemantics</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -17,10 +17,19 @@
             <version>4.12</version>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.lanterna</groupId>
-            <artifactId>lanterna</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
-            <type>jar</type>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.21</version>
         </dependency>
     </dependencies>
     <properties>
@@ -30,3 +39,20 @@
     </properties>
     
 </project>
+<!--<build>
+        <plugins> 
+            <plugin>
+                <artifactId>maven-assembly-pugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.mscs_710l.SySTemantics</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptionRefs>
+                        <descriptionRef>jar-with-dependencies</descriptionRef>
+                    </descriptionRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>-->
