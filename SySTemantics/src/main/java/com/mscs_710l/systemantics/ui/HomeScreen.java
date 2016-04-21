@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
 public class HomeScreen extends Application {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(HomeScreen.class);
-    private TableView table = new TableView();
+    private final TableView tblProcessInfo = new TableView();
+    private final TableView tblMemoryInfo = new TableView();
 
     @Override
     public void start(Stage primaryStage) {
@@ -49,14 +50,22 @@ public class HomeScreen extends Application {
                     final VBox vbox = new VBox();
                     vbox.setSpacing(5);
                     vbox.setPadding(new Insets(50, 10, 10, 70));
-                    vbox.getChildren().addAll(table);
+                    vbox.getChildren().addAll(tblProcessInfo);
 
                     ((Group) scene.getRoot()).getChildren().addAll(vbox);
-                    tab.setContent(table);
+                    tab.setContent(tblProcessInfo);
                     
                     break;
                 case 1:
                     tab.setText("Memory Info");
+                    createMemoryTable();
+                    final VBox vbox1 = new VBox();
+                    vbox1.setSpacing(5);
+                    vbox1.setPadding(new Insets(50, 10, 10, 70));
+                    vbox1.getChildren().addAll(tblMemoryInfo);
+
+                    ((Group) scene.getRoot()).getChildren().addAll(vbox1);
+                    tab.setContent(tblMemoryInfo);
                     break;
                 case 2:
                     tab.setText("Network Info");
@@ -102,7 +111,7 @@ public class HomeScreen extends Application {
             TableColumn timeCol = new TableColumn("Time");
             TableColumn commandCol = new TableColumn("Command");
 
-            table.getColumns().addAll(pidCol, ppidCol, usernameCol,
+            tblProcessInfo.getColumns().addAll(pidCol, ppidCol, usernameCol,
                     priorityCol, niceCol, virtualCol, resCol, sharedCol,
                     statusCol, prctCpuUsageCol, prctMemUsageCol, timeCol, commandCol);
 
@@ -111,4 +120,33 @@ public class HomeScreen extends Application {
         }
     }
 
+     private void createMemoryTable() {
+        try {
+            TableColumn tolMemCol = new TableColumn("Total Memory");
+            TableColumn usedMemCol = new TableColumn("Used Memory");
+            TableColumn activeMemCol = new TableColumn("Active Memory");
+            TableColumn inactiveMemCol = new TableColumn("Inactive Memory");
+            TableColumn buffMemCol = new TableColumn("Buffer Memory");
+            TableColumn swapCacheCol = new TableColumn("Swap Cache");
+            TableColumn totalSwapCol = new TableColumn("Total Swap");
+            TableColumn swapUsedCol = new TableColumn("Swap Used");
+            TableColumn systemCPUTicksCol = new TableColumn("System CPU Ticks");
+            TableColumn idleCPUTicksCol = new TableColumn("Idle CPU Ticks");
+            TableColumn ioWaitCpuTicksCol = new TableColumn("IO Wait CPU Ticks");
+            TableColumn pgsPagedInCol = new TableColumn("Pages Paged In");
+            TableColumn pgsPagedOutCol = new TableColumn("Pages Paged Out");
+            TableColumn pgsSwappedInCol = new TableColumn("Pages Swapped In");
+            TableColumn pgsSwappedOutCol = new TableColumn("Pages Swapped Out");
+            TableColumn interruptsCol = new TableColumn("Interrupts");
+            TableColumn bootTimeCol = new TableColumn("Boot Time");
+
+            tblMemoryInfo.getColumns().addAll(tolMemCol, usedMemCol, activeMemCol,
+                    inactiveMemCol, buffMemCol, swapCacheCol, totalSwapCol, swapUsedCol,
+                    systemCPUTicksCol, idleCPUTicksCol, ioWaitCpuTicksCol, pgsPagedInCol, pgsPagedOutCol,
+                    pgsSwappedInCol,pgsSwappedOutCol,interruptsCol,bootTimeCol);
+
+        } catch (Exception ex) {
+            LOGGER.error("Exception in createMemoryTable() in HomeScreen.java" + ex.getMessage());
+        }
+    }
 }
