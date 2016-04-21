@@ -12,7 +12,7 @@ package com.mscs_710l.systemantics.pojo;
  */
 public class ProcessInfo {
 
-  String PI_PID;
+  int PI_PID;
   String PI_Username;
   String PI_Priority;
   int PI_Nice;
@@ -25,14 +25,15 @@ public class ProcessInfo {
   String PI_TIME;
   String PI_Command;
 
-  public String getPI_PID() {
+  public int getPI_PID() {
     return PI_PID;
   }
 
-  public void setPI_PID(String PI_PID) {
+  public void setPI_PID(int PI_PID) {
     this.PI_PID = PI_PID;
   }
 
+  
   public String getPI_Username() {
     return PI_Username;
   }
