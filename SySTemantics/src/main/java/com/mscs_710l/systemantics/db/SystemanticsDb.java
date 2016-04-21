@@ -33,7 +33,9 @@ public class SystemanticsDb {
   private static Connection c;
   private static Statement stmt;
   private String msg = "";
-
+/**
+ * 
+ */
   public static void saveSystematic() {
     LOGGER.debug("SystemanticsDb saveSystematic(): Starts");
     try {
@@ -53,7 +55,14 @@ public class SystemanticsDb {
     LOGGER.info("Opened database successfully");
     LOGGER.debug("SystemanticsDb saveSystematic(): Ends");
   }
-
+/**
+ * 
+ * @param aSQLScriptFilePath
+ * @param stmt
+ * @return
+ * @throws IOException
+ * @throws SQLException 
+ */
   private static boolean executeDBScripts(String aSQLScriptFilePath, Statement stmt)
     throws IOException, SQLException {
     LOGGER.debug("SystemanticsDb executeDBScripts(): Ends");
@@ -73,7 +82,11 @@ public class SystemanticsDb {
     }
     return isScriptExecuted;
   }
-
+/**
+ * 
+ * @param fmList
+ * @return 
+ */
   public String saveFreeMemory(List<FreeMemory> fmList) {
     try {
       Class.forName("org.sqlite.JDBC");
@@ -100,7 +113,11 @@ public class SystemanticsDb {
 
     return msg;
   }
-
+/**
+ * 
+ * @param processInfosList
+ * @return 
+ */
   public String saveProcessInfo(List<ProcessInfo> processInfosList) {
 
     try {
@@ -137,7 +154,11 @@ public class SystemanticsDb {
 
     return msg;
   }
-
+/**
+ * 
+ * @param networkStatList
+ * @return 
+ */
   public String saveNetworkStats(List<NetworkStats> networkStatList) {
     String msg = "";
     try {
@@ -168,9 +189,12 @@ public class SystemanticsDb {
 
     return msg;
   }
-
+/**
+ * 
+ * @param virtualMemoryStatList
+ * @return 
+ */
   public String saveVMStats(List<VirtualMemoryStats> virtualMemoryStatList) {
-    String msg = "";
     try {
       Class.forName("org.sqlite.JDBC");
       c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
@@ -211,9 +235,12 @@ public class SystemanticsDb {
 
     return msg;
   }
-
+/**
+ * 
+ * @param virtualDiskInfoList
+ * @return 
+ */
   public String saveVirtualDiskInfo(List<VirtualDiskInfo> virtualDiskInfoList) {
-    String msg = "";
     try {
       Class.forName("org.sqlite.JDBC");
       c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
@@ -247,10 +274,13 @@ public class SystemanticsDb {
 
     return msg;
   }
-
+/**
+ * 
+ * @param iOStatsList
+ * @return 
+ */
   public String saveIOStats(List<IOStats> iOStatsList) {
 
-    String msg = "";
     try {
       Class.forName("org.sqlite.JDBC");
       c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
