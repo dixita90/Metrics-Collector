@@ -29,41 +29,48 @@ public class CpuInfo {
 
   SystemanticsDb systemanticsDb;
   private final static Logger LOGGER = LoggerFactory.getLogger(CpuInfo.class);
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String getCpu(String cmd) {
     LOGGER.debug("CpuInfo getCpu(): starts");
     String status = "";
     try {
-      // start up the command in child process
-      Process child = Runtime.getRuntime().exec(cmd);
-      BufferedReader input = new BufferedReader(new InputStreamReader(child.getInputStream()));
-      String cpuInfo;
-      List<String> cpuStatArray = new ArrayList();
-      for (int i = 0; i < input.read(); i++) {
-        cpuInfo = input.readLine();
-        cpuStatArray.add(cpuInfo);
-//        System.out.println(cpuInfo);
-      }
-      List processInfoList = setProcessSats(cpuStatArray);
-      systemanticsDb = new SystemanticsDb();
-      status = systemanticsDb.saveProcessInfo(processInfoList);
+      if (cmd.equals("top -b")) {
+        // start up the command in child process
+        Process child = Runtime.getRuntime().exec(cmd);
+        BufferedReader input = new BufferedReader(new InputStreamReader(child.getInputStream()));
+        String cpuInfo;
+        List<String> cpuStatArray = new ArrayList();
+        for (int i = 0; i < input.read(); i++) {
+          cpuInfo = input.readLine();
+          cpuStatArray.add(cpuInfo);
+          System.out.println(cpuInfo);
+        }
+        List processInfoList = setProcessSats(cpuStatArray);
+        systemanticsDb = new SystemanticsDb();
+        status = systemanticsDb.saveProcessInfo(processInfoList);
 //      System.out.println(status);
+      }
+      else{
+        LOGGER.error("invalid command");
+      }
     } catch (Exception e) { // exception thrown
 //      System.out.println("Command failed!");
-      LOGGER.error(e.getMessage());
+      LOGGER.error("exception occured"+e.getMessage());
     }
     LOGGER.debug("CpuInfo getCpu(): ends");
     return status;
   }
-/**
- * 
- * @param array
- * @return 
- */
+
+  /**
+   *
+   * @param array
+   * @return
+   */
   private List<ProcessInfo> setProcessSats(List<String> array) {
     LOGGER.debug("CpuInfo  setProcessStats(): Starts");
     List<ProcessInfo> processInfoList = new ArrayList<>();
@@ -162,11 +169,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  setProcessStats(): ends");
     return processInfoList;
   }
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String memoryStats(String cmd) {
     LOGGER.debug("CpuInfo  memoryStats(): Starts");
     String status = "";
@@ -193,7 +201,7 @@ public class CpuInfo {
       }
       List fmList = setvalues(array);
       systemanticsDb = new SystemanticsDb();
-       status = systemanticsDb.saveFreeMemory(fmList);
+      status = systemanticsDb.saveFreeMemory(fmList);
 //      System.out.println(status);
     } catch (Exception e) { // exception thrown
 //      System.out.println("Command failed!");
@@ -202,11 +210,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  memoryStats(): ends");
     return status;
   }
-/**
- * 
- * @param array
- * @return 
- */
+
+  /**
+   *
+   * @param array
+   * @return
+   */
   private static List<FreeMemory> setvalues(String[] array) {
     LOGGER.debug("CpuInfo  setvalues(): Start");
     List fmList = new ArrayList();
@@ -244,11 +253,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  setvalues(): ends");
     return fmList;
   }
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String virtualMemoryStats(String cmd) {
     LOGGER.debug("CpuInfo  virtualMemoryStats(): Start");
     String status = "";
@@ -271,7 +281,7 @@ public class CpuInfo {
       }
       List vMList = setVMStats(vMStat);
       systemanticsDb = new SystemanticsDb();
-       status = systemanticsDb.saveVMStats(vMList);
+      status = systemanticsDb.saveVMStats(vMList);
 //      System.out.println(status);
     } catch (Exception e) { // exception thrown
       LOGGER.debug("CpuInfo error" + e.getMessage());
@@ -280,11 +290,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  virtualMemoryStats(): ends");
     return status;
   }
-/**
- * 
- * @param vMStatList
- * @return 
- */
+
+  /**
+   *
+   * @param vMStatList
+   * @return
+   */
   private List<VirtualMemoryStats> setVMStats(List<String> vMStatList) {
     LOGGER.debug("CpuInfo  setVMStats(): starts");
     List<VirtualMemoryStats> virtualMemoryStatsList = new ArrayList<>();
@@ -358,11 +369,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  setVMStats(): ends");
     return virtualMemoryStatsList;
   }
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String virtualDiskStats(String cmd) {
     LOGGER.debug("CpuInfo  virtualDiskStats(): Start");
     String status = "";
@@ -385,7 +397,7 @@ public class CpuInfo {
       }
       List vDiskList = setVDiskStats(vDiskStat);
       systemanticsDb = new SystemanticsDb();
-       status = systemanticsDb.saveVirtualDiskInfo(vDiskList);
+      status = systemanticsDb.saveVirtualDiskInfo(vDiskList);
 //      System.out.println(status);
     } catch (Exception e) { // exception thrown
       LOGGER.error("CpuInfo virtualDiskStats()" + e.getMessage());
@@ -394,11 +406,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  virtualDiskStats(): ends");
     return status;
   }
-/**
- * 
- * @param vDiskStatList
- * @return 
- */
+
+  /**
+   *
+   * @param vDiskStatList
+   * @return
+   */
   private List<VirtualDiskInfo> setVDiskStats(List<String> vDiskStatList) {
     LOGGER.debug("CpuInfo  setVDiskStats(): starts");
     List<VirtualDiskInfo> virtualDiskStatsList = new ArrayList<>();
@@ -468,11 +481,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  setVMStats(): ends");
     return virtualDiskStatsList;
   }
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String networkStats(String cmd) {
     LOGGER.debug("CpuInfo  networkStats(): starts");
     String status = "";
@@ -496,7 +510,7 @@ public class CpuInfo {
       }
       List vMList = setNetworkStats(networkStat);
       systemanticsDb = new SystemanticsDb();
-       status = systemanticsDb.saveNetworkStats(vMList);
+      status = systemanticsDb.saveNetworkStats(vMList);
 //      System.out.println(status);
     } catch (Exception e) { // exception thrown
 //      System.out.println("Command failed!");
@@ -504,11 +518,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  networkStats(): ends");
     return status;
   }
-/**
- * 
- * @param array
- * @return 
- */
+
+  /**
+   *
+   * @param array
+   * @return
+   */
   private List<NetworkStats> setNetworkStats(List<String> array) {
     LOGGER.debug("CpuInfo  setNetworkStats(): starts");
     List<NetworkStats> networkStatList = new ArrayList<>();
@@ -577,10 +592,11 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo  setNetworkStats(): ends");
     return networkStatList;
   }
-/**
- * 
- * @return 
- */
+
+  /**
+   *
+   * @return
+   */
   public String discInformation() {
     /* Get a list of all filesystem roots on this system */
     String status = "";
@@ -598,10 +614,11 @@ public class CpuInfo {
     }
     return status;
   }
-/**
- * 
- * @return 
- */
+
+  /**
+   *
+   * @return
+   */
   public String cpuInformation() {
     String status = "";
     try {
@@ -626,14 +643,15 @@ public class CpuInfo {
     }
     return status;
   }
-/**
- * 
- * @param cmd
- * @return 
- */
+
+  /**
+   *
+   * @param cmd
+   * @return
+   */
   public String iOStats(String cmd) {
     LOGGER.debug("CpuInfo iOStats(): Starts ");
-    String status ="";
+    String status = "";
     try {
       // start up the command in child process
 
@@ -654,7 +672,7 @@ public class CpuInfo {
       }
       List iOStatList = setIOStats(iOStats);
       systemanticsDb = new SystemanticsDb();
-       status = systemanticsDb.saveIOStats(iOStatList);
+      status = systemanticsDb.saveIOStats(iOStatList);
 //      System.out.println(status);
     } catch (Exception e) { // exception thrown
       LOGGER.error("exception" + e.getMessage());
@@ -663,11 +681,12 @@ public class CpuInfo {
     LOGGER.debug("CpuInfo iOStats(): Ends ");
     return status;
   }
-/**
- * 
- * @param list
- * @return 
- */
+
+  /**
+   *
+   * @param list
+   * @return
+   */
   private List<IOStats> setIOStats(List<String> list) {
     LOGGER.debug("CpuInfo  setIOStats(): starts");
     List<IOStats> ioStatsList = new ArrayList<>();

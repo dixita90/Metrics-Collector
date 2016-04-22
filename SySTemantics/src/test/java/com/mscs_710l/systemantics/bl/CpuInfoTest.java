@@ -43,7 +43,7 @@ public class CpuInfoTest {
   @Test
   public void testGetCpu() {
     System.out.println("getCpu");
-    String cmd = "top -b";
+    String cmd = "free -m";
     CpuInfo instance = new CpuInfo();
     String expResult = "Success";
     String result = instance.getCpu(cmd);

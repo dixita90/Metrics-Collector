@@ -5,8 +5,6 @@
  */
 package com.mscs_710l.systemantics.ui;
 
-import com.mscs_710l.systemantics.db.SystemanticsDb;
-import com.sun.media.jfxmedia.logging.Logger;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Group;

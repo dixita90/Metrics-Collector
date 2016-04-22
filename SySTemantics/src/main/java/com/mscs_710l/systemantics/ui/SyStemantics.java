@@ -40,13 +40,13 @@ public class SyStemantics {
     cpuInfo.memoryStats(cmdFreeMemory);
     cpuInfo.virtualMemoryStats(cmdVmStat);
     cpuInfo.virtualDiskStats(cmdVDiskStats);
-     cpuInfo.getCpu(cmdTop);
+     cpuInfo.getCpu(cmdFreeMemory);
 //    cpuInfo.getCpu(cmdMeminfo);
     cpuInfo.networkStats(cmdNetStatTcp);
     cpuInfo.networkStats(cmdNetStatUdp);
    cpuInfo.iOStats(cmdIostat);
-//     cpuInfo.discInformation();
-//     cpuInfo.cpuInformation();
+     cpuInfo.discInformation();
+     cpuInfo.cpuInformation();
     LOGGER.debug("SySTematics main(): ends");
   }
 }
