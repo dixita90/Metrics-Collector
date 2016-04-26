@@ -31,6 +31,13 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.7.21</version>
         </dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>javafx</artifactId>
+            <version>2.2.3</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/bin/java</systemPath>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -40,19 +47,19 @@
     
 </project>
 <!--<build>
-        <plugins> 
-            <plugin>
-                <artifactId>maven-assembly-pugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.mscs_710l.SySTemantics</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptionRefs>
-                        <descriptionRef>jar-with-dependencies</descriptionRef>
-                    </descriptionRefs>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>-->
+    <plugins> 
+        <plugin>
+            <artifactId>maven-assembly-pugin</artifactId>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>com.mscs_710l.SySTemantics</mainClass>
+                    </manifest>
+                </archive>
+                <descriptionRefs>
+                    <descriptionRef>jar-with-dependencies</descriptionRef>
+                </descriptionRefs>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>-->
