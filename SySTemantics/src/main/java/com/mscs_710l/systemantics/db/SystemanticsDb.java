@@ -35,20 +35,21 @@ import org.slf4j.LoggerFactory;
 /**
  * SystemanticsDb
  *
- * This class implements functions which create data bases for storing CPU Information,
- * Disc Information, IO Statistics, Memory Statistics, Network Statistics, Virtual Memory
- * Statistics. Systematically all the information is logged into the database
- * and displayed in regular time intervals.
+ * This class implements functions which create data bases for storing CPU
+ * Information, Disc Information, IO Statistics, Memory Statistics, Network
+ * Statistics, Virtual Memory Statistics. Systematically all the information is
+ * logged into the database and displayed in regular time intervals.
  */
 public class SystemanticsDb {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemanticsDb.class);
     private static Connection c;
     private static Statement stmt;
     private String msg = "";
 
     /**
-     *saveSystematic
-     * 
+     * saveSystematic
+     *
      */
     public static void saveSystematic() {
         LOGGER.debug("SystemanticsDb: saveSystematic(): Starts");
@@ -70,6 +71,7 @@ public class SystemanticsDb {
     }
 
     /**
+     * executeDBScripts
      *
      * @param aSQLScriptFilePath
      * @param stmt
@@ -79,7 +81,7 @@ public class SystemanticsDb {
      */
     private static boolean executeDBScripts(String aSQLScriptFilePath, Statement stmt)
             throws IOException, SQLException {
-        LOGGER.debug("SystemanticsDb executeDBScripts(): Ends");
+        LOGGER.debug("SystemanticsDb: executeDBScripts(): Starts");
         boolean isScriptExecuted = false;
         try {
             BufferedReader in = new BufferedReader(new FileReader(aSQLScriptFilePath));
@@ -94,16 +96,19 @@ public class SystemanticsDb {
         } catch (IOException | SQLException e) {
             System.err.println("Failed to Execute" + aSQLScriptFilePath + ". The error is" + e.getMessage());
         }
+        LOGGER.debug("SystemanticsDb: executeDBScripts(): Ends");
         return isScriptExecuted;
     }
 
     /**
+     * saveFreeMemory
      *
      * @param fmList
-     * @return
+     * @returns msg
      */
     public String saveFreeMemory(List<FreeMemory> fmList) {
         try {
+            LOGGER.debug("SystemanticsDb: saveFreeMemory(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < fmList.size(); i++) {
@@ -124,16 +129,19 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
+        LOGGER.debug("SystemanticsDb: saveFreeMemory(): Ends");
         return msg;
     }
 
     /**
+     * saveProcessInfo
      *
      * @param processInfosList
-     * @return
+     * @returns msg
      */
     public String saveProcessInfo(List<ProcessInfo> processInfosList) {
         try {
+            LOGGER.debug("SystemanticsDb: saveProcessInfo(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < processInfosList.size(); i++) {
@@ -163,17 +171,20 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
+        LOGGER.debug("SystemanticsDb: saveProcessInfo(): Ends");
         return msg;
     }
 
     /**
+     * saveNetworkStats
      *
      * @param networkStatList
-     * @return
+     * @returns msg
      */
     public String saveNetworkStats(List<NetworkStats> networkStatList) {
         String msg = "";
         try {
+            LOGGER.debug("SystemanticsDb: saveNetworkStats(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < networkStatList.size(); i++) {
@@ -197,16 +208,19 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
+        LOGGER.debug("SystemanticsDb: saveNetworkStats(): Ends");
         return msg;
     }
 
     /**
+     * saveVMStats
      *
      * @param virtualMemoryStatList
-     * @return
+     * @returns msg
      */
     public String saveVMStats(List<VirtualMemoryStats> virtualMemoryStatList) {
         try {
+            LOGGER.debug("SystemanticsDb: saveVMStats(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
 
@@ -243,19 +257,21 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = "not Success";
         }
+        LOGGER.debug("SystemanticsDb: saveVMStats(): Ends");
         return msg;
     }
 
     /**
+     * saveVirtualDiskInfo
      *
      * @param virtualDiskInfoList
-     * @return
+     * @returns msg
      */
     public String saveVirtualDiskInfo(List<VirtualDiskInfo> virtualDiskInfoList) {
         try {
+            LOGGER.debug("SystemanticsDb: saveVirtualDiskInfo(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
-
             for (int i = 0; i < virtualDiskInfoList.size(); i++) {
                 VirtualDiskInfo virtualDiskInfo = virtualDiskInfoList.get(i);
                 String query = "INSERT INTO tblVMStatDisk(VM_DISKNAME,VM_TOTALREADS,VM_MERGEDREADS,"
@@ -282,20 +298,21 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
+        LOGGER.debug("SystemanticsDb: saveVirtualDiskInfo(): Ends");
         return msg;
     }
 
     /**
+     * saveIOStats
      *
      * @param iOStatsList
-     * @return
+     * @returns msg
      */
     public String saveIOStats(List<IOStats> iOStatsList) {
-
         try {
+            LOGGER.debug("SystemanticsDb: saveIOStats(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
-
             for (int i = 0; i < iOStatsList.size(); i++) {
                 IOStats ioStats = iOStatsList.get(i);
                 String query = "INSERT INTO tblIOStats(IO_DISKNAME,IO_TRANSFERPERSEC,IO_KB_READS,"
@@ -316,7 +333,7 @@ public class SystemanticsDb {
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
-
+        LOGGER.debug("SystemanticsDb: saveIOStats(): Ends");
         return msg;
     }
 }
