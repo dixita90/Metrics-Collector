@@ -16,4 +16,12 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-modules-javascript2-requirejs.enabled>true</org-netbeans-modules-javascript2-requirejs.enabled>
         <org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>true</org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>
     </properties>
+    <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+        <word>Bhargav</word>
+        <word>Chintapalli</word>
+        <word>Dixita</word>
+        <word>lscpu</word>
+        <word>Sheregar</word>
+        <word>Uppalapati</word>
+    </spellchecker-wordlist>
 </project-shared-configuration>

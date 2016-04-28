@@ -10,7 +10,7 @@ package com.mscs_710l.systemantics.pojo;
  * @author Siva Chintapalli
  */
 public class MemoryInfo {
- float MI_TotalMemory;
+float MI_TotalMemory;
 float MI_UsedMemory;
 float MI_ActiveMemory;
 float MI_InactiveMemory;
