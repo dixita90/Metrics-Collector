@@ -76,7 +76,7 @@ public class CpuInfo {
                 LOGGER.error("invalid shell command");
             }
         } catch (Exception cpuinfo) { // exception thrown
-           //System.out.println("Command failed!");
+            //System.out.println("Command failed!");
             LOGGER.error("exception occured at getCpu() " + cpuinfo.getMessage());
         }
         LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : ends");
@@ -167,7 +167,7 @@ public class CpuInfo {
                         pInfo.setPI_PerctMemUsage(Double.parseDouble(processValues[j]));
                     }
                     if (j % processValues.length == 10) {
-                    //java.sql.Time time = java.sql.Time.valueOf(processValues[j]);
+                        //java.sql.Time time = java.sql.Time.valueOf(processValues[j]);
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
@@ -226,7 +226,7 @@ public class CpuInfo {
             status = systemanticsDb.saveFreeMemory(fmList);
             //System.out.println(status);
         } catch (Exception memorystats) { // exception thrown
-        //System.out.println("Command failed!");
+            //System.out.println("Command failed!");
             LOGGER.error("error occured at memoryStats()" + memorystats.getMessage());
         }
         LOGGER.debug("Class CpuInfo:  memoryStats(): ends");
@@ -548,7 +548,7 @@ public class CpuInfo {
             status = systemanticsDb.saveNetworkStats(vMList);
             //System.out.println(status);
         } catch (Exception e) { // exception thrown
-        //System.out.println("Command failed!");
+            //System.out.println("Command failed!");
         }
         LOGGER.debug("CpuInfo: networkStats(): ends");
         return status;
