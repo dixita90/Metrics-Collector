@@ -41,7 +41,7 @@ public class HomeScreen extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home Screen");
         Group root = new Group();
-        Scene scene = new Scene(root, 1250, 450, Color.WHITE);
+        Scene scene = new Scene(root, 1250, 450, Color.LIGHTGRAY);
 
         TabPane tabPane = new TabPane();
 
