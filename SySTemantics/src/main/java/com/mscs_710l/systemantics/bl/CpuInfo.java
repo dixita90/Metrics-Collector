@@ -703,7 +703,7 @@ public class CpuInfo {
      * @param cmd
      * @return
      */
-    public String iOStats(String cmd) {
+    public List<IOStats> iOStats(String cmd) {
         LOGGER.debug("CpuInfo: iOStats(): Starts ");
         String status = "";
         try {
@@ -726,12 +726,15 @@ public class CpuInfo {
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveIOStats(iOStatList);
             //System.out.println(status);
+            LOGGER.debug("CpuInfo: iOStats(): Ends ");
+            return iOStatList;
         } catch (Exception iostats) { // exception thrown
             LOGGER.error("CpuInfo: exception occured at iOStats()" + iostats.getMessage());
             //System.out.println("Command failed!");
+            return null;
         }
-        LOGGER.debug("CpuInfo: iOStats(): Ends ");
-        return status;
+        
+       
     }
 
     /**

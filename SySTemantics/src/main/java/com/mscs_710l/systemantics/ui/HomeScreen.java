@@ -10,6 +10,7 @@ package com.mscs_710l.systemantics.ui;
 import com.mscs_710l.systemantics.bl.CpuInfo;
 import com.mscs_710l.systemantics.db.SystemanticsDb;
 import com.mscs_710l.systemantics.pojo.FreeMemory;
+import com.mscs_710l.systemantics.pojo.IOStats;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
@@ -112,9 +113,12 @@ public class HomeScreen extends Application {
                     lst = c.virtualMemoryStats(CMDVMSTAT);
                     bindListToTable(lst, 13);
 
+                    lst = c.iOStats(CMDIOSTAT);
+                    bindListToTable(lst, 14);
+
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(
-                            tblFreeMemory, tblVmStatDisk, tblVmStat);
+                            tblFreeMemory, tblVmStatDisk, tblVmStat,tblIOStats);
                     tab.setContent(vBox);
 
                     ScrollPane sp = new ScrollPane();
@@ -185,13 +189,13 @@ public class HomeScreen extends Application {
         PropertyConfigurator.configure("log4j.properties");
         LOGGER.debug("SySTematics main(): starts");
         CpuInfo cpuInfo = new CpuInfo();
-        cpuInfo.memoryStats(CMDFREEMEMORY);
-        cpuInfo.virtualMemoryStats(CMDVMSTAT);
-        cpuInfo.virtualDiskStats(CMDVDISKSTATS);
-        List lstCpuInfo = cpuInfo.getCpu(CMDTOP);
+        //cpuInfo.memoryStats(CMDFREEMEMORY);
+        //cpuInfo.virtualMemoryStats(CMDVMSTAT);
+        //cpuInfo.virtualDiskStats(CMDVDISKSTATS);
+        //List lstCpuInfo = cpuInfo.getCpu(CMDTOP);
         cpuInfo.networkStats(CMDNETSTATTCP);
         cpuInfo.networkStats(CMDNETSTATUDP);
-        cpuInfo.iOStats(CMDIOSTAT);
+        //cpuInfo.iOStats(CMDIOSTAT);
         cpuInfo.discInformation();
         cpuInfo.cpuInformation();
 
@@ -217,6 +221,9 @@ public class HomeScreen extends Application {
                     break;
                 case 13:
                     tblVmStat.setItems(data);
+                    break;
+                case 14:
+                    tblIOStats.setItems(data);
                     break;
                 default:
                     break;
@@ -390,7 +397,7 @@ public class HomeScreen extends Application {
             vmContextSwitchesCol.setCellValueFactory(
                     new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CONTXTSWITCHES"));
             TableColumn vmCpuNonKernelModeCol = new TableColumn("CPU Non Kernel Mode");
-             vmCpuNonKernelModeCol.setCellValueFactory(
+            vmCpuNonKernelModeCol.setCellValueFactory(
                     new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUNONKERNALMODE"));
             TableColumn vmCpuKernelModeCol = new TableColumn("CPU Kernel Mode");
             vmCpuKernelModeCol.setCellValueFactory(
@@ -402,15 +409,36 @@ public class HomeScreen extends Application {
             vmWaitIOCol.setCellValueFactory(
                     new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUWAITIO"));
             TableColumn vmTimeStolenCol = new TableColumn("Time Stolen");
-             vmTimeStolenCol.setCellValueFactory(
+            vmTimeStolenCol.setCellValueFactory(
                     new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_TIMESTOLENVM"));
 
             tblVmStat.getColumns().addAll(vmProcessWaitCol, vmProcessIoWaitCol,
-                    vmSwpdOutCol, vmFreeCol,vmBufferCol, vmCacheCol, vmOsSwapInCol,
+                    vmSwpdOutCol, vmFreeCol, vmBufferCol, vmCacheCol, vmOsSwapInCol,
                     vmOsSwapOutCol, vmBlockRead, vmBlockWriteCol, vmInterruptsCol,
                     vmContextSwitchesCol, vmCpuNonKernelModeCol, vmCpuKernelModeCol,
                     vmCpuIdleTimeCol, vmWaitIOCol, vmTimeStolenCol);
 
+            TableColumn ioDiskNameCol = new TableColumn("IO Disk Name");
+            ioDiskNameCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, String>("IO_DISKNAME"));
+            TableColumn ioTransferCol = new TableColumn("IO Transfer Per sec");
+            ioTransferCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, Double>("IO_TRANSFERPERSEC"));
+            TableColumn ioKbReadsCol = new TableColumn("IO KB Read");
+            ioKbReadsCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, Double>("IO_KB_READS"));
+            TableColumn ioKbWritesCol = new TableColumn("IO KB Write");
+            ioKbWritesCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, Double>("IO_KB_WRITES"));
+            TableColumn ioTotBlocksReadCol = new TableColumn("IO Total Blocks Read");
+            ioTotBlocksReadCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, Double>("IO_TOTALBLOCKSREAD"));
+            TableColumn ioTotBlocksWriteCol = new TableColumn("IO Total Blocks Write");
+            ioTotBlocksWriteCol.setCellValueFactory(
+                    new PropertyValueFactory<IOStats, Double>("IO_TOATALBLOCKSWRITES"));
+
+            tblIOStats.getColumns().addAll(ioDiskNameCol, ioTransferCol, ioKbReadsCol, 
+                    ioKbWritesCol, ioTotBlocksReadCol, ioTotBlocksWriteCol);
         } catch (Exception ex) {
             LOGGER.error("Exception in createMemoryTable() in HomeScreen.java" + ex.getMessage());
         }
