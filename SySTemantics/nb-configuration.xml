@@ -22,6 +22,7 @@ Any value defined here will override the pom.xml file value but is only applicab
         <word>Dixita</word>
         <word>lscpu</word>
         <word>msg</word>
+        <word>Protocal</word>
         <word>Sheregar</word>
         <word>Uppalapati</word>
     </spellchecker-wordlist>

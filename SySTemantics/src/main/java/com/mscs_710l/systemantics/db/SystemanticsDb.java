@@ -56,6 +56,7 @@ public class SystemanticsDb {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
+            //........................
             String f = "/root/Projects/Metrics-Collector/SySTemantics/Scripts/CreateTableScripts.sql";
             stmt = c.createStatement();
             System.out.println(stmt.getResultSet());
@@ -63,10 +64,9 @@ public class SystemanticsDb {
             executeDBSCripts = executeDBScripts(f, stmt);
         } catch (ClassNotFoundException | SQLException | IOException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
-            LOGGER.error("exception occured" + e.getMessage());
-            //System.exit(0);
+            LOGGER.error("SystemanticsDb: exception occured at saveSystematic() " + e.getMessage());
         }
-        LOGGER.info("Opened database successfully");
+        LOGGER.info("SystemanticsDb: Opened database successfully");
         LOGGER.debug("SystemanticsDb: saveSystematic(): Ends");
     }
 
@@ -75,7 +75,7 @@ public class SystemanticsDb {
      *
      * @param aSQLScriptFilePath
      * @param stmt
-     * @return
+     * @returns isScriptExecuted
      * @throws IOException
      * @throws SQLException
      */
@@ -94,7 +94,7 @@ public class SystemanticsDb {
             int i = stmt.executeUpdate(sb.toString());
             isScriptExecuted = true;
         } catch (IOException | SQLException e) {
-            System.err.println("Failed to Execute" + aSQLScriptFilePath + ". The error is" + e.getMessage());
+            System.err.println("SystemanticsDb: Failed to Execute" + aSQLScriptFilePath + ". The error is" + e.getMessage());
         }
         LOGGER.debug("SystemanticsDb: executeDBScripts(): Ends");
         return isScriptExecuted;
@@ -103,16 +103,19 @@ public class SystemanticsDb {
     /**
      * saveFreeMemory
      *
-     * @param fmList
-     * @returns msg
+     * @param fmList 
+     * @return msg
      */
     public String saveFreeMemory(List<FreeMemory> fmList) {
         try {
             LOGGER.debug("SystemanticsDb: saveFreeMemory(): Starts");
+            //..................................
             Class.forName("org.sqlite.JDBC");
+            //..................................
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < fmList.size(); i++) {
                 FreeMemory fm = fmList.get(i);
+                //..................
                 String query = "INSERT INTO tblFreeMemory(FM_NAME,FM_TOTAL,FM_USED,FM_SHARED,FM_BUFFCACHE,FM_AVAILABLE)" + "values(?,?,?,?,?,?)";
                 PreparedStatement pStmt = c.prepareStatement(query);
                 pStmt.setString(1, fm.getName());
@@ -125,7 +128,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveFreeMemory()");
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
@@ -137,7 +140,7 @@ public class SystemanticsDb {
      * saveProcessInfo
      *
      * @param processInfosList
-     * @returns msg
+     * @return msg
      */
     public String saveProcessInfo(List<ProcessInfo> processInfosList) {
         try {
@@ -146,6 +149,7 @@ public class SystemanticsDb {
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < processInfosList.size(); i++) {
                 ProcessInfo processInfo = processInfosList.get(i);
+                //...................
                 String query = "INSERT INTO tblProcessInfo(PI_PID,PI_Username,PI_Priority,"
                         + "PI_Nice,PI_Virtual,PI_Res,PI_Shared,PI_Status,"
                         + "PI_PerctCpuUsage,PI_PerctMemUsage,PI_TIME,PI_Command)"
@@ -167,7 +171,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveProcessInfo()");
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
@@ -179,7 +183,7 @@ public class SystemanticsDb {
      * saveNetworkStats
      *
      * @param networkStatList
-     * @returns msg
+     * @return msg
      */
     public String saveNetworkStats(List<NetworkStats> networkStatList) {
         String msg = "";
@@ -189,6 +193,7 @@ public class SystemanticsDb {
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < networkStatList.size(); i++) {
                 NetworkStats networkStats = networkStatList.get(i);
+                //.....................
                 String query = "INSERT INTO tblNetworkInfo(NI_PID,NI_PROTOCOL,"
                         + "NI_USER,NI_PROGRAM,NI_BWSENT,NI_BWRECEIVED,NI_STATUS)"
                         + "values(?,?,?,?,?,?,?)";
@@ -204,7 +209,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveNetworkStats()");
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
@@ -216,16 +221,16 @@ public class SystemanticsDb {
      * saveVMStats
      *
      * @param virtualMemoryStatList
-     * @returns msg
+     * @return msg
      */
     public String saveVMStats(List<VirtualMemoryStats> virtualMemoryStatList) {
         try {
             LOGGER.debug("SystemanticsDb: saveVMStats(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
-
             for (int i = 0; i < virtualMemoryStatList.size(); i++) {
                 VirtualMemoryStats vmStats = virtualMemoryStatList.get(i);
+                //......................
                 String query = "INSERT INTO tblVMStat(VM_PROCESS_WAIT_TIME,VM_PROCESS_IO_WAIT_TIME,"
                         + "VM_SWPDOUT,VM_FREE,VM_BUFFER,VM_CACHE,VM_OSSWAPIN,VM_OSSWAPOUT,VM_BLOCKREAD,"
                         + "VM_BLOCKWRITE,VM_INTERRUPTS,VM_CONTXTSWITCHES,VM_CPUNONKERNALMODE,VM_CPUKERNALMODE,"
@@ -253,7 +258,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveVMStats()");
             System.err.println(e.getMessage());
             msg = "not Success";
         }
@@ -265,7 +270,7 @@ public class SystemanticsDb {
      * saveVirtualDiskInfo
      *
      * @param virtualDiskInfoList
-     * @returns msg
+     * @return msg
      */
     public String saveVirtualDiskInfo(List<VirtualDiskInfo> virtualDiskInfoList) {
         try {
@@ -274,6 +279,7 @@ public class SystemanticsDb {
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < virtualDiskInfoList.size(); i++) {
                 VirtualDiskInfo virtualDiskInfo = virtualDiskInfoList.get(i);
+                //.............................
                 String query = "INSERT INTO tblVMStatDisk(VM_DISKNAME,VM_TOTALREADS,VM_MERGEDREADS,"
                         + "VM_SECTORSREADS,VM_MSREADS,VM_TOATALWRITES,VM_MERGEDWRITES,VM_SECTORWRITES,VM_MSWRITES,"
                         + "VM_CUR,VM_SEC)"
@@ -294,7 +300,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveVirtualDiskInfo()");
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
@@ -306,7 +312,7 @@ public class SystemanticsDb {
      * saveIOStats
      *
      * @param iOStatsList
-     * @returns msg
+     * @return msg
      */
     public String saveIOStats(List<IOStats> iOStatsList) {
         try {
@@ -315,6 +321,7 @@ public class SystemanticsDb {
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
             for (int i = 0; i < iOStatsList.size(); i++) {
                 IOStats ioStats = iOStatsList.get(i);
+                //.............................
                 String query = "INSERT INTO tblIOStats(IO_DISKNAME,IO_TRANSFERPERSEC,IO_KB_READS,"
                         + "IO_KB_WRITES,IO_TOTALBLOCKSREAD,IO_TOATALBLOCKSWRITES)"
                         + "values(?,?,?,?,?,?)";
@@ -329,7 +336,7 @@ public class SystemanticsDb {
             }
             msg = "Success";
         } catch (SQLException | ClassNotFoundException e) {
-            System.err.println("an exception Occured");
+            System.err.println("SystemanticsDb: an exception Occured at saveIOStats() ");
             System.err.println(e.getMessage());
             msg = e.getMessage();
         }
