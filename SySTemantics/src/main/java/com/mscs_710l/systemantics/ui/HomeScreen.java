@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  * file: HomeScreen.java
  * author: Siva Chintapalli, Dixita Sheregar, Bhargav Uppalapati.
@@ -10,17 +5,24 @@
  * Project
  * version: 1.0
  *
- * This file contains functions which implement ..............
+ * This file contains code for UI and populating data from the backend to the UI.
  */
 package com.mscs_710l.systemantics.ui;
+import com.mscs_710l.systemantics.bl.CpuInfo;
+import com.mscs_710l.systemantics.db.SystemanticsDb;
+import com.mscs_710l.systemantics.pojo.ProcessInfo;
+import java.util.List;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -30,12 +32,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.LoggerFactory;
 
 /**
  * HomeScreen
  *
- * This class implements functions which..........
+ * This class implements contains code for UI and populating data from the backend to the UI.
  */
 public class HomeScreen extends Application {
 
@@ -46,6 +49,30 @@ public class HomeScreen extends Application {
     private final TableView tblVmStatDisk = new TableView();
     private final TableView tblIOStats = new TableView();
     private final TableView tblNetStats = new TableView();
+    
+     static {
+        SystemanticsDb.saveSystematic();
+    }
+     
+    //"top"- command to pull system information.
+    private static final String CMDTOP = "top -b";
+    //command to pull free memory that is avaliable.
+    private static final String CMDFREEMEMORY = "free -m";
+    //command to pull memory information.
+    private static final String CMDMEMINFO = "cat /proc/meminfo";
+    //command to access virtual memory statistics.
+    private static final String CMDVMSTAT = "vmstat -t 1 6";
+    //command to access virtual memory statistics.
+    private static final String CMDVDISKSTATS = "vmstat -t -d";
+    //command to access network statistics.
+    private static final String CMDNETSTATTCP = "netstat -e -p -at";
+    //command to access network statistics.
+    private static final String CMDNETSTATUDP = "netstat -au";
+    //command to access IO statistics.
+    private static final String CMDIOSTAT = "iostat -d -N";
+
+    private List lstCpuInfo;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -63,6 +90,9 @@ public class HomeScreen extends Application {
                 case 0:
                     tab.setText("CPU Info");
                     createProcessTable();
+                    CpuInfo c = new CpuInfo();
+                    List p = c.getCpu(CMDTOP);
+                    bindListToTable(p);
                     tab.setContent(tblProcessInfo);
 
                     break;
@@ -140,25 +170,76 @@ public class HomeScreen extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+         PropertyConfigurator.configure("log4j.properties");
+        LOGGER.debug("SySTematics main(): starts");
+        CpuInfo cpuInfo = new CpuInfo();
+        cpuInfo.memoryStats(CMDFREEMEMORY);
+        cpuInfo.virtualMemoryStats(CMDVMSTAT);
+        cpuInfo.virtualDiskStats(CMDVDISKSTATS);
+        List lstCpuInfo = cpuInfo.getCpu(CMDTOP);
+        cpuInfo.networkStats(CMDNETSTATTCP);
+        cpuInfo.networkStats(CMDNETSTATUDP);
+        cpuInfo.iOStats(CMDIOSTAT);
+        cpuInfo.discInformation();
+        cpuInfo.cpuInformation();
+
+        LOGGER.debug("HomeScreen main(): ends");
+    }
+    
+    private void bindListToTable(List<ProcessInfo> lst) {
+        try {
+            final ObservableList<ProcessInfo> data = FXCollections.observableArrayList();
+            for (ProcessInfo p : lst) {
+                data.add(p);
+            }
+            tblProcessInfo.setItems(data);
+
+        } catch (Exception ex) {
+            LOGGER.error("Error in bindListToTable(): " + ex.getMessage());
+        }
     }
 
     private void createProcessTable() {
         try {
-            TableColumn pidCol = new TableColumn("Process ID");
+           // TableColumn pidCol = new TableColumn("Process ID");
             TableColumn ppidCol = new TableColumn("Parent Process ID");
-            TableColumn usernameCol = new TableColumn("Username");
+            ppidCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Integer>("PI_PID"));
+             TableColumn usernameCol = new TableColumn("Username");
+            usernameCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_Username"));
             TableColumn priorityCol = new TableColumn("Priority");
+            priorityCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_Priority"));
             TableColumn niceCol = new TableColumn("Nice Value");
+            niceCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Integer>("PI_Nice"));
             TableColumn virtualCol = new TableColumn("Virtual");
+            virtualCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Integer>("PI_Virtual"));
             TableColumn resCol = new TableColumn("Res");
+            resCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_Res"));
             TableColumn sharedCol = new TableColumn("Shared");
+            sharedCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Integer>("PI_Shared"));
             TableColumn statusCol = new TableColumn("Status");
+            statusCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_Status"));
             TableColumn prctCpuUsageCol = new TableColumn("% CPU Usage");
+            prctCpuUsageCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Double>("PI_PerctCpuUsage"));
             TableColumn prctMemUsageCol = new TableColumn("% Memory Usage");
+            prctMemUsageCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, Double>("PI_PerctMemUsage"));
             TableColumn timeCol = new TableColumn("Time");
+            timeCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_TIME"));
             TableColumn commandCol = new TableColumn("Command");
+            commandCol.setCellValueFactory(
+                    new PropertyValueFactory<ProcessInfo, String>("PI_Command"));
 
-            tblProcessInfo.getColumns().addAll(pidCol, ppidCol, usernameCol,
+            tblProcessInfo.getColumns().addAll(ppidCol, usernameCol,
                     priorityCol, niceCol, virtualCol, resCol, sharedCol,
                     statusCol, prctCpuUsageCol, prctMemUsageCol, timeCol, commandCol);
 

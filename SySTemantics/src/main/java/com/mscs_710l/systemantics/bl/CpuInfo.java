@@ -53,9 +53,10 @@ public class CpuInfo {
      * @param cmd
      * @returns status
      */
-    public String getCpu(String cmd) {
+     public List<ProcessInfo> getCpu(String cmd) {
         LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : starts");
         String status = "";
+        List processInfoList=null;
         try {
             if (cmd.equals("top -b")) {
                 // start up the command in child process
@@ -68,19 +69,20 @@ public class CpuInfo {
                     cpuStatArray.add(cpuInfo);
                     System.out.println(cpuInfo);
                 }
-                List processInfoList = setProcessSats(cpuStatArray);
+                processInfoList = setProcessSats(cpuStatArray);
                 systemanticsDb = new SystemanticsDb();
                 status = systemanticsDb.saveProcessInfo(processInfoList);
                 //System.out.println(status);
             } else {
                 LOGGER.error("invalid shell command");
             }
+            LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : ends");
+           return processInfoList;
         } catch (Exception cpuinfo) { // exception thrown
             //System.out.println("Command failed!");
             LOGGER.error("exception occured at getCpu() " + cpuinfo.getMessage());
+            return null;
         }
-        LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : ends");
-        return status;
     }
 
     /**
