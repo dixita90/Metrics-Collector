@@ -527,9 +527,9 @@ public class CpuInfo {
      * is displayed.
      *
      * @param cmd
-     * @returns status
+     * @return 
      */
-    public String networkStats(String cmd) {
+    public List<NetworkStats> networkStats(String cmd) {
         LOGGER.debug("CpuInfo: networkStats(): starts");
         String status = "";
         try {
@@ -550,12 +550,14 @@ public class CpuInfo {
             List vMList = setNetworkStats(networkStat);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveNetworkStats(vMList);
+            LOGGER.debug("CpuInfo: networkStats(): ends");
+            return vMList;
             //System.out.println(status);
         } catch (Exception e) { // exception thrown
             //System.out.println("Command failed!");
+            return null;
         }
-        LOGGER.debug("CpuInfo: networkStats(): ends");
-        return status;
+        
     }
 
     /**

@@ -11,6 +11,7 @@ import com.mscs_710l.systemantics.bl.CpuInfo;
 import com.mscs_710l.systemantics.db.SystemanticsDb;
 import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.IOStats;
+import com.mscs_710l.systemantics.pojo.NetworkStats;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
@@ -75,8 +76,7 @@ public class HomeScreen extends Application {
     //command to access IO statistics.
     private static final String CMDIOSTAT = "iostat -d -N";
 
-    private List lstCpuInfo;
-
+   // private List lstCpuInfo;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home Screen");
@@ -118,16 +118,21 @@ public class HomeScreen extends Application {
 
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(
-                            tblFreeMemory, tblVmStatDisk, tblVmStat,tblIOStats);
+                            tblFreeMemory, tblVmStatDisk, tblVmStat, tblIOStats);
                     tab.setContent(vBox);
 
-                    ScrollPane sp = new ScrollPane();
+                    //ScrollPane sp = new ScrollPane();
                     //sp.setContent(tab);
                     break;
                 case 2:
                     tab.setText("Network Info");
                     createNetworkTable();
+
+                    lst = c.networkStats(CMDNETSTATTCP);
+                    bindListToTable(lst, 2);
+
                     tab.setContent(tblNetStats);
+
                     break;
                 case 3:
                     tab.setText("System Details");
@@ -193,7 +198,7 @@ public class HomeScreen extends Application {
         //cpuInfo.virtualMemoryStats(CMDVMSTAT);
         //cpuInfo.virtualDiskStats(CMDVDISKSTATS);
         //List lstCpuInfo = cpuInfo.getCpu(CMDTOP);
-        cpuInfo.networkStats(CMDNETSTATTCP);
+        //cpuInfo.networkStats(CMDNETSTATTCP);
         cpuInfo.networkStats(CMDNETSTATUDP);
         //cpuInfo.iOStats(CMDIOSTAT);
         cpuInfo.discInformation();
@@ -224,6 +229,9 @@ public class HomeScreen extends Application {
                     break;
                 case 14:
                     tblIOStats.setItems(data);
+                    break;
+                case 2:
+                    tblNetStats.setItems(data);
                     break;
                 default:
                     break;
@@ -285,15 +293,30 @@ public class HomeScreen extends Application {
 
     private void createNetworkTable() {
         try {
-            TableColumn nidCol = new TableColumn("Network ID");
-            TableColumn npidCol = new TableColumn("Network Process ID");
-            TableColumn nProtocolCol = new TableColumn("Protocol");
-            TableColumn nUserCol = new TableColumn("User");
-            TableColumn nBWSentCol = new TableColumn("Sending Bandwidth");
-            TableColumn nBWReceivedCol = new TableColumn("Receiving Bandwidth");
-            TableColumn nStatus = new TableColumn("Status");
 
-            tblNetStats.getColumns().addAll(nidCol, npidCol, nProtocolCol,
+            TableColumn npidCol = new TableColumn("Network Process ID");
+            npidCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, Integer>("NI_PID"));
+            TableColumn nProtocolCol = new TableColumn("Protocol");
+            nProtocolCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, String>("NI_Protocal"));
+            TableColumn nUserCol = new TableColumn("User");
+            nUserCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, String>("NI_User"));
+            TableColumn nPrgCol = new TableColumn("Program");
+            nPrgCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, String>("NI_Program"));
+            TableColumn nBWSentCol = new TableColumn("Sending Bandwidth");
+            nBWSentCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, Double>("NI_BWSent"));
+            TableColumn nBWReceivedCol = new TableColumn("Receiving Bandwidth");
+            nBWReceivedCol.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, Double>("NI_BWReceived"));
+            TableColumn nStatus = new TableColumn("Status");
+            nStatus.setCellValueFactory(
+                    new PropertyValueFactory<NetworkStats, String>("NI_Status"));
+
+            tblNetStats.getColumns().addAll(npidCol, nProtocolCol,nPrgCol,
                     nUserCol, nBWSentCol, nBWReceivedCol, nStatus);
 
         } catch (Exception ex) {
@@ -437,7 +460,7 @@ public class HomeScreen extends Application {
             ioTotBlocksWriteCol.setCellValueFactory(
                     new PropertyValueFactory<IOStats, Double>("IO_TOATALBLOCKSWRITES"));
 
-            tblIOStats.getColumns().addAll(ioDiskNameCol, ioTransferCol, ioKbReadsCol, 
+            tblIOStats.getColumns().addAll(ioDiskNameCol, ioTransferCol, ioKbReadsCol,
                     ioKbWritesCol, ioTotBlocksReadCol, ioTotBlocksWriteCol);
         } catch (Exception ex) {
             LOGGER.error("Exception in createMemoryTable() in HomeScreen.java" + ex.getMessage());
