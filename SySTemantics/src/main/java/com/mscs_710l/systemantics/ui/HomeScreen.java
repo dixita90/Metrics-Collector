@@ -76,7 +76,12 @@ public class HomeScreen extends Application {
     //command to access IO statistics.
     private static final String CMDIOSTAT = "iostat -d -N";
 
-   // private List lstCpuInfo;
+   /**
+    * This function sets the scene, i.e all UI elements.
+    * Four tabs are created to display Process,Memory, Network and System 
+    * related data. Data is populated in the tables by executing commands.
+    * @param primaryStage Paints the scene on the screen.
+    */
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home Screen");
@@ -129,6 +134,7 @@ public class HomeScreen extends Application {
                     createNetworkTable();
 
                     lst = c.networkStats(CMDNETSTATTCP);
+                    lst.addAll(c.networkStats(CMDNETSTATUDP));
                     bindListToTable(lst, 2);
 
                     tab.setContent(tblNetStats);
@@ -187,6 +193,7 @@ public class HomeScreen extends Application {
     }
 
     /**
+     * Launches the screen and sets the logger
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -199,7 +206,7 @@ public class HomeScreen extends Application {
         //cpuInfo.virtualDiskStats(CMDVDISKSTATS);
         //List lstCpuInfo = cpuInfo.getCpu(CMDTOP);
         //cpuInfo.networkStats(CMDNETSTATTCP);
-        cpuInfo.networkStats(CMDNETSTATUDP);
+        //cpuInfo.networkStats(CMDNETSTATUDP);
         //cpuInfo.iOStats(CMDIOSTAT);
         cpuInfo.discInformation();
         cpuInfo.cpuInformation();
@@ -207,6 +214,11 @@ public class HomeScreen extends Application {
         LOGGER.debug("HomeScreen main(): ends");
     }
 
+    /**
+     * Binds the list returned after executing commands to the tableView
+     * @param lst Contains data that needs to be displayed on screen.
+     * @param tabNumber used to bind data to appropriate table.
+     */
     private void bindListToTable(List lst, int tabNumber) {
         try {
             //final ObservableList<ProcessInfo> data = FXCollections.observableArrayList();
@@ -242,6 +254,10 @@ public class HomeScreen extends Application {
         }
     }
 
+    /**
+     * Create the process info table with appropriate data types for each column
+     * and the link to appropriate field to which it is bound.
+     */
     private void createProcessTable() {
         try {
             // TableColumn pidCol = new TableColumn("Process ID");
@@ -291,6 +307,10 @@ public class HomeScreen extends Application {
         }
     }
 
+     /**
+     * Create the network info table with appropriate data types for each column
+     * and the link to appropriate field to which it is bound.
+     */
     private void createNetworkTable() {
         try {
 
@@ -324,6 +344,10 @@ public class HomeScreen extends Application {
         }
     }
 
+     /**
+     * Create the memory info table with appropriate data types for each column
+     * and the link to appropriate field to which it is bound.
+     */
     private void createMemoryTable() {
         try {
             TableColumn freeMemNameCol = new TableColumn("Memory Name");
