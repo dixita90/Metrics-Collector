@@ -409,7 +409,7 @@ public class CpuInfo {
      * @param cmd
      * @return
      */
-    public String virtualDiskStats(String cmd) {
+    public List<VirtualDiskInfo> virtualDiskStats(String cmd) {
         LOGGER.debug("CpuInfo: virtualDiskStats(): Start");
         String status = "";
         try {
@@ -431,12 +431,13 @@ public class CpuInfo {
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveVirtualDiskInfo(vDiskList);
             //System.out.println(status);
+            LOGGER.debug("CpuInfo: virtualDiskStats(): ends");
+            return vDiskList;
         } catch (Exception e) { // exception thrown
             LOGGER.error("CpuInfo: error occured at virtualDiskStats()" + e.getMessage());
             //System.out.println("Command failed!");
+            return null;
         }
-        LOGGER.debug("CpuInfo: virtualDiskStats(): ends");
-        return status;
     }
 
     /**

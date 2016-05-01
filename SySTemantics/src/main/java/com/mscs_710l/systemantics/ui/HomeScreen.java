@@ -11,6 +11,7 @@ import com.mscs_710l.systemantics.bl.CpuInfo;
 import com.mscs_710l.systemantics.db.SystemanticsDb;
 import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
+import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import java.util.List;
 
 import javafx.application.Application;
@@ -94,7 +95,7 @@ public class HomeScreen extends Application {
                     createProcessTable();
 
                     lst = c.getCpu(CMDTOP);
-                    bindListToTable(lst,0);
+                    bindListToTable(lst, 0);
                     tab.setContent(tblProcessInfo);
 
                     break;
@@ -102,7 +103,11 @@ public class HomeScreen extends Application {
                     tab.setText("Memory Info");
                     createMemoryTable();
                     lst = c.memoryStats(CMDFREEMEMORY);
-                    bindListToTable(lst,1);
+                    bindListToTable(lst, 11);
+
+                    lst = c.virtualDiskStats(CMDVDISKSTATS);
+                    bindListToTable(lst, 12);
+
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(
                             tblFreeMemory, tblVmStatDisk, tblVmStat);
@@ -200,8 +205,11 @@ public class HomeScreen extends Application {
                 case 0:
                     tblProcessInfo.setItems(data);
                     break;
-                case 1:
+                case 11:
                     tblFreeMemory.setItems(data);
+                    break;
+                case 12:
+                    tblVmStatDisk.setItems(data);
                     break;
                 default:
                     break;
@@ -294,23 +302,45 @@ public class HomeScreen extends Application {
             freeMemSharedCol.setCellValueFactory(
                     new PropertyValueFactory<FreeMemory, Integer>("shared"));
             TableColumn freeMemBuffCacheCol = new TableColumn("Buffer Cache");
-             freeMemBuffCacheCol.setCellValueFactory(
+            freeMemBuffCacheCol.setCellValueFactory(
                     new PropertyValueFactory<FreeMemory, Integer>("buff_cache"));
 
             tblFreeMemory.getColumns().addAll(freeMemNameCol, freeMemTotCol,
                     freeMemUsedMemCol, freeMemSharedCol, freeMemBuffCacheCol);
 
             TableColumn vmDiskNameCol = new TableColumn("Memory ID");
+            vmDiskNameCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, String>("VM_DISKNAME"));
             TableColumn vmTotReadsCol = new TableColumn("Total Reads");
+            vmTotReadsCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_TOTALREADS"));
             TableColumn vmMergedReadsCol = new TableColumn("Merged Reads");
+            vmMergedReadsCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_MERGEDREADS"));
             TableColumn vmSectorReadsCol = new TableColumn("Sector Reads");
+            vmSectorReadsCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_SECTORSREADS"));
             TableColumn vmMSReadsCol = new TableColumn("MS Reads");
+            vmMSReadsCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_MSREADS"));
             TableColumn vmTotalWritesCol = new TableColumn("Total Writes");
+            vmTotalWritesCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_TOATALWRITES"));
             TableColumn vmMergedWritesCol = new TableColumn("Merged Writes");
+            vmMergedWritesCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_MERGEDWRITES"));
             TableColumn vmSectorWritesCol = new TableColumn("Sector Writes");
+            vmSectorWritesCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_SECTORWRITES"));
             TableColumn vmMSWritesCol = new TableColumn("MS Writes");
+            vmMSWritesCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_MSWRITES"));
             TableColumn vmCurCol = new TableColumn("Cur");
+            vmCurCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_CUR"));
             TableColumn vmSecCol = new TableColumn("Sec");
+            vmSecCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualDiskInfo, Integer>("VM_SEC"));
 
             tblVmStatDisk.getColumns().addAll(vmDiskNameCol, vmTotReadsCol, vmMergedReadsCol,
                     vmSectorReadsCol, vmMSReadsCol, vmTotalWritesCol, vmMergedWritesCol,
