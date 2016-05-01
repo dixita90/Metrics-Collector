@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 /**
- * file: SystemanticsDb.java
+ * file: SyStemantics.java
  * author: Siva Chintapalli, Dixita Sheregar, Bhargav Uppalapati.
  * course: MSCS 710
  * Project

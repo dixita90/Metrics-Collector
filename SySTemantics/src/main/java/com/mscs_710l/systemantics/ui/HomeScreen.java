@@ -3,6 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+/**
+ * file: HomeScreen.java
+ * author: Siva Chintapalli, Dixita Sheregar, Bhargav Uppalapati.
+ * course: MSCS 710
+ * Project
+ * version: 1.0
+ *
+ * This file contains functions which implement ..............
+ */
 package com.mscs_710l.systemantics.ui;
 
 import javafx.application.Application;
@@ -24,8 +33,9 @@ import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 
 /**
+ * HomeScreen
  *
- * @author dixita
+ * This class implements functions which..........
  */
 public class HomeScreen extends Application {
 
