@@ -4,11 +4,8 @@
  * and open the template in the editor.
  */
 /**
- * file: CpuInfo.java
- * author: Dixita Sheregar, Siva Chintapalli, Bhargav Uppalapati.
- * course: MSCS 710
- * Project
- * version: 1.0
+ * file: CpuInfo.java author: Dixita Sheregar, Siva Chintapalli, Bhargav
+ * Uppalapati. course: MSCS 710 Project version: 1.0
  *
  * This file contains functions which implement system Metrics.
  */
@@ -53,10 +50,10 @@ public class CpuInfo {
      * @param cmd
      * @returns status
      */
-     public List<ProcessInfo> getCpu(String cmd) {
+    public List<ProcessInfo> getCpu(String cmd) {
         LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : starts");
         String status = "";
-        List processInfoList=null;
+        List processInfoList = null;
         try {
             if (cmd.equals("top -b")) {
                 // start up the command in child process
@@ -77,7 +74,7 @@ public class CpuInfo {
                 LOGGER.error("invalid shell command");
             }
             LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : ends");
-           return processInfoList;
+            return processInfoList;
         } catch (Exception cpuinfo) { // exception thrown
             //System.out.println("Command failed!");
             LOGGER.error("exception occured at getCpu() " + cpuinfo.getMessage());
@@ -202,7 +199,7 @@ public class CpuInfo {
      * @param cmd
      * @returns status
      */
-    public String memoryStats(String cmd) {
+    public List<FreeMemory> memoryStats(String cmd) {
         LOGGER.debug("CpuInfo:  memoryStats(): Starts");
         String status = "";
         try {
@@ -226,13 +223,14 @@ public class CpuInfo {
             List fmList = setvalues(array);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveFreeMemory(fmList);
+            LOGGER.debug("Class CpuInfo:  memoryStats(): ends");
             //System.out.println(status);
+            return fmList;
         } catch (Exception memorystats) { // exception thrown
             //System.out.println("Command failed!");
             LOGGER.error("error occured at memoryStats()" + memorystats.getMessage());
+            return null;
         }
-        LOGGER.debug("Class CpuInfo:  memoryStats(): ends");
-        return status;
     }
 
     /**

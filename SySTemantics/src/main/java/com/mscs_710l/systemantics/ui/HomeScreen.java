@@ -1,15 +1,15 @@
 /**
- * file: HomeScreen.java
- * author: Siva Chintapalli, Dixita Sheregar, Bhargav Uppalapati.
- * course: MSCS 710
- * Project
- * version: 1.0
+ * file: HomeScreen.java author: Siva Chintapalli, Dixita Sheregar, Bhargav
+ * Uppalapati. course: MSCS 710 Project version: 1.0
  *
- * This file contains code for UI and populating data from the backend to the UI.
+ * This file contains code for UI and populating data from the backend to the
+ * UI.
  */
 package com.mscs_710l.systemantics.ui;
+
 import com.mscs_710l.systemantics.bl.CpuInfo;
 import com.mscs_710l.systemantics.db.SystemanticsDb;
+import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
 import java.util.List;
 
@@ -38,7 +38,8 @@ import org.slf4j.LoggerFactory;
 /**
  * HomeScreen
  *
- * This class implements contains code for UI and populating data from the backend to the UI.
+ * This class implements contains code for UI and populating data from the
+ * backend to the UI.
  */
 public class HomeScreen extends Application {
 
@@ -49,11 +50,11 @@ public class HomeScreen extends Application {
     private final TableView tblVmStatDisk = new TableView();
     private final TableView tblIOStats = new TableView();
     private final TableView tblNetStats = new TableView();
-    
-     static {
+
+    static {
         SystemanticsDb.saveSystematic();
     }
-     
+
     //"top"- command to pull system information.
     private static final String CMDTOP = "top -b";
     //command to pull free memory that is avaliable.
@@ -73,7 +74,6 @@ public class HomeScreen extends Application {
 
     private List lstCpuInfo;
 
-
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Home Screen");
@@ -86,20 +86,23 @@ public class HomeScreen extends Application {
         for (int i = 0; i < 4; i++) {
             Tab tab = new Tab();
             tab.setClosable(false);
+            CpuInfo c = new CpuInfo();
+            List lst;
             switch (i) {
                 case 0:
                     tab.setText("CPU Info");
                     createProcessTable();
-                    CpuInfo c = new CpuInfo();
-                    List p = c.getCpu(CMDTOP);
-                    bindListToTable(p);
+
+                    lst = c.getCpu(CMDTOP);
+                    bindListToTable(lst,0);
                     tab.setContent(tblProcessInfo);
 
                     break;
                 case 1:
                     tab.setText("Memory Info");
                     createMemoryTable();
-
+                    lst = c.memoryStats(CMDFREEMEMORY);
+                    bindListToTable(lst,1);
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(
                             tblFreeMemory, tblVmStatDisk, tblVmStat);
@@ -124,25 +127,25 @@ public class HomeScreen extends Application {
                     grid.setPadding(new Insets(25, 25, 25, 25));
                     Label lblCompName = new Label("Computer Name:");
                     grid.add(lblCompName, 0, 1);
-                    
+
                     Label lblCompNameVal = new Label("DIXITA_PC");
                     grid.add(lblCompNameVal, 1, 1);
-                    
-                     Label lblSysType = new Label("System Type:");
+
+                    Label lblSysType = new Label("System Type:");
                     grid.add(lblSysType, 0, 2);
-                    
-                     Label lblSysTypeVal = new Label("64 bit OS");
+
+                    Label lblSysTypeVal = new Label("64 bit OS");
                     grid.add(lblSysTypeVal, 1, 2);
-                    
+
                     Label lblProcessor = new Label("Procesor:");
                     grid.add(lblProcessor, 0, 3);
-                    
+
                     Label lblProcessorVal = new Label("i5");
                     grid.add(lblProcessorVal, 1, 3);
-                    
+
                     Label lblRAM = new Label("Installed Memory (RAM)");
                     grid.add(lblRAM, 0, 4);
-                    
+
                     Label lblRAMVal = new Label("6.00 GB");
                     grid.add(lblRAMVal, 1, 4);
 
@@ -170,7 +173,7 @@ public class HomeScreen extends Application {
      */
     public static void main(String[] args) {
         launch(args);
-         PropertyConfigurator.configure("log4j.properties");
+        PropertyConfigurator.configure("log4j.properties");
         LOGGER.debug("SySTematics main(): starts");
         CpuInfo cpuInfo = new CpuInfo();
         cpuInfo.memoryStats(CMDFREEMEMORY);
@@ -185,14 +188,24 @@ public class HomeScreen extends Application {
 
         LOGGER.debug("HomeScreen main(): ends");
     }
-    
-    private void bindListToTable(List<ProcessInfo> lst) {
+
+    private void bindListToTable(List lst, int tabNumber) {
         try {
-            final ObservableList<ProcessInfo> data = FXCollections.observableArrayList();
-            for (ProcessInfo p : lst) {
+            //final ObservableList<ProcessInfo> data = FXCollections.observableArrayList();
+            final ObservableList<Object> data = FXCollections.observableArrayList();
+            for (Object p : lst) {
                 data.add(p);
             }
-            tblProcessInfo.setItems(data);
+            switch (tabNumber) {
+                case 0:
+                    tblProcessInfo.setItems(data);
+                    break;
+                case 1:
+                    tblFreeMemory.setItems(data);
+                    break;
+                default:
+                    break;
+            }
 
         } catch (Exception ex) {
             LOGGER.error("Error in bindListToTable(): " + ex.getMessage());
@@ -201,11 +214,11 @@ public class HomeScreen extends Application {
 
     private void createProcessTable() {
         try {
-           // TableColumn pidCol = new TableColumn("Process ID");
+            // TableColumn pidCol = new TableColumn("Process ID");
             TableColumn ppidCol = new TableColumn("Parent Process ID");
             ppidCol.setCellValueFactory(
                     new PropertyValueFactory<ProcessInfo, Integer>("PI_PID"));
-             TableColumn usernameCol = new TableColumn("Username");
+            TableColumn usernameCol = new TableColumn("Username");
             usernameCol.setCellValueFactory(
                     new PropertyValueFactory<ProcessInfo, String>("PI_Username"));
             TableColumn priorityCol = new TableColumn("Priority");
@@ -268,16 +281,24 @@ public class HomeScreen extends Application {
 
     private void createMemoryTable() {
         try {
-            TableColumn freeMemIDCol = new TableColumn("Memory ID");
             TableColumn freeMemNameCol = new TableColumn("Memory Name");
+            freeMemNameCol.setCellValueFactory(
+                    new PropertyValueFactory<FreeMemory, String>("name"));
             TableColumn freeMemTotCol = new TableColumn("Total Free Memory");
+            freeMemTotCol.setCellValueFactory(
+                    new PropertyValueFactory<FreeMemory, Integer>("total"));
             TableColumn freeMemUsedMemCol = new TableColumn("Used Memory");
+            freeMemUsedMemCol.setCellValueFactory(
+                    new PropertyValueFactory<FreeMemory, Integer>("used"));
             TableColumn freeMemSharedCol = new TableColumn("Shared Memory");
+            freeMemSharedCol.setCellValueFactory(
+                    new PropertyValueFactory<FreeMemory, Integer>("shared"));
             TableColumn freeMemBuffCacheCol = new TableColumn("Buffer Cache");
-            TableColumn freeMemAvailCol = new TableColumn("Available Memory");
+             freeMemBuffCacheCol.setCellValueFactory(
+                    new PropertyValueFactory<FreeMemory, Integer>("buff_cache"));
 
-            tblFreeMemory.getColumns().addAll(freeMemIDCol, freeMemNameCol, freeMemTotCol,
-                    freeMemUsedMemCol, freeMemSharedCol, freeMemBuffCacheCol, freeMemAvailCol);
+            tblFreeMemory.getColumns().addAll(freeMemNameCol, freeMemTotCol,
+                    freeMemUsedMemCol, freeMemSharedCol, freeMemBuffCacheCol);
 
             TableColumn vmDiskNameCol = new TableColumn("Memory ID");
             TableColumn vmTotReadsCol = new TableColumn("Total Reads");
