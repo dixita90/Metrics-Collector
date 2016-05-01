@@ -286,9 +286,10 @@ public class CpuInfo {
      * Necessary data is displayed.
      *
      * @param cmd
+     * @return 
      * @returns status
      */
-    public String virtualMemoryStats(String cmd) {
+    public List<VirtualMemoryStats> virtualMemoryStats(String cmd) {
         LOGGER.debug("CpuInfo: virtualMemoryStats(): Start");
         String status = "";
         try {
@@ -310,12 +311,14 @@ public class CpuInfo {
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveVMStats(vMList);
             //System.out.println(status);
+            LOGGER.debug("CpuInfo: virtualMemoryStats(): ends");
+            return vMList;
         } catch (Exception virtualmemorystats) { // exception thrown
             LOGGER.debug("CpuInfo: error occured at virtualMemoryStats() " + virtualmemorystats.getMessage());
             //System.out.println("Command failed!");
+            return null;
         }
-        LOGGER.debug("CpuInfo: virtualMemoryStats(): ends");
-        return status;
+
     }
 
     /**

@@ -12,6 +12,7 @@ import com.mscs_710l.systemantics.db.SystemanticsDb;
 import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
+import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
 import java.util.List;
 
 import javafx.application.Application;
@@ -107,6 +108,9 @@ public class HomeScreen extends Application {
 
                     lst = c.virtualDiskStats(CMDVDISKSTATS);
                     bindListToTable(lst, 12);
+
+                    lst = c.virtualMemoryStats(CMDVMSTAT);
+                    bindListToTable(lst, 13);
 
                     VBox vBox = new VBox();
                     vBox.getChildren().addAll(
@@ -210,6 +214,9 @@ public class HomeScreen extends Application {
                     break;
                 case 12:
                     tblVmStatDisk.setItems(data);
+                    break;
+                case 13:
+                    tblVmStat.setItems(data);
                     break;
                 default:
                     break;
@@ -346,26 +353,60 @@ public class HomeScreen extends Application {
                     vmSectorReadsCol, vmMSReadsCol, vmTotalWritesCol, vmMergedWritesCol,
                     vmSectorWritesCol, vmMSWritesCol, vmCurCol, vmSecCol);
 
-            TableColumn vmIDCol = new TableColumn("VM ID");
             TableColumn vmProcessWaitCol = new TableColumn("VM Process Wait Time");
+            vmProcessWaitCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_PROCESS_WAIT_TIME"));
             TableColumn vmProcessIoWaitCol = new TableColumn("VM Process IO Wait Time");
+            vmProcessIoWaitCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_PROCESS_IO_WAIT_TIME"));
             TableColumn vmSwpdOutCol = new TableColumn("Swpd Out");
+            vmSwpdOutCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_SWPDOUT"));
             TableColumn vmFreeCol = new TableColumn("VM Free");
+            vmFreeCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_FREE"));
+            TableColumn vmBufferCol = new TableColumn("VM Buffer");
+            vmBufferCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_BUFFER"));
             TableColumn vmCacheCol = new TableColumn("VM Cache");
+            vmCacheCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CACHE"));
             TableColumn vmOsSwapInCol = new TableColumn("OS Swap In");
+            vmOsSwapInCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_OSSWAPIN"));
             TableColumn vmOsSwapOutCol = new TableColumn("OS Swap Out");
+            vmOsSwapOutCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_OSSWAPOUT"));
             TableColumn vmBlockRead = new TableColumn("VM Block Read");
+            vmBlockRead.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_BLOCKREAD"));
             TableColumn vmBlockWriteCol = new TableColumn("VM Block Write");
+            vmBlockWriteCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_BLOCKWRITE"));
             TableColumn vmInterruptsCol = new TableColumn("VM Interrupts");
+            vmInterruptsCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_INTERRUPTS"));
             TableColumn vmContextSwitchesCol = new TableColumn("Context Switches");
+            vmContextSwitchesCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CONTXTSWITCHES"));
             TableColumn vmCpuNonKernelModeCol = new TableColumn("CPU Non Kernel Mode");
+             vmCpuNonKernelModeCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUNONKERNALMODE"));
             TableColumn vmCpuKernelModeCol = new TableColumn("CPU Kernel Mode");
+            vmCpuKernelModeCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUKERNALMODE"));
             TableColumn vmCpuIdleTimeCol = new TableColumn("CPU Idle Time");
+            vmCpuIdleTimeCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUIDELTIME"));
             TableColumn vmWaitIOCol = new TableColumn("CPU Wait IO");
+            vmWaitIOCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_CPUWAITIO"));
             TableColumn vmTimeStolenCol = new TableColumn("Time Stolen");
+             vmTimeStolenCol.setCellValueFactory(
+                    new PropertyValueFactory<VirtualMemoryStats, Integer>("VM_TIMESTOLENVM"));
 
-            tblVmStat.getColumns().addAll(vmIDCol, vmProcessWaitCol, vmProcessIoWaitCol,
-                    vmSwpdOutCol, vmFreeCol, vmCacheCol, vmOsSwapInCol,
+            tblVmStat.getColumns().addAll(vmProcessWaitCol, vmProcessIoWaitCol,
+                    vmSwpdOutCol, vmFreeCol,vmBufferCol, vmCacheCol, vmOsSwapInCol,
                     vmOsSwapOutCol, vmBlockRead, vmBlockWriteCol, vmInterruptsCol,
                     vmContextSwitchesCol, vmCpuNonKernelModeCol, vmCpuKernelModeCol,
                     vmCpuIdleTimeCol, vmWaitIOCol, vmTimeStolenCol);
