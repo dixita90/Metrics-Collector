@@ -16,6 +16,7 @@ import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.IOStats;
 import com.mscs_710l.systemantics.pojo.NetworkStats;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
+import com.mscs_710l.systemantics.pojo.SystemDetails;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
 import java.io.BufferedReader;
@@ -286,7 +287,7 @@ public class CpuInfo {
      * Necessary data is displayed.
      *
      * @param cmd
-     * @return 
+     * @return
      * @returns status
      */
     public List<VirtualMemoryStats> virtualMemoryStats(String cmd) {
@@ -527,7 +528,7 @@ public class CpuInfo {
      * is displayed.
      *
      * @param cmd
-     * @return 
+     * @return
      */
     public List<NetworkStats> networkStats(String cmd) {
         LOGGER.debug("CpuInfo: networkStats(): starts");
@@ -557,7 +558,7 @@ public class CpuInfo {
             //System.out.println("Command failed!");
             return null;
         }
-        
+
     }
 
     /**
@@ -671,7 +672,7 @@ public class CpuInfo {
      *
      * @returns status
      */
-    public String cpuInformation() {
+    public SystemDetails cpuInformation() {
         LOGGER.debug("CpuInfo: cpuInformation(): starts");
         String status = "";
         try {
@@ -685,13 +686,30 @@ public class CpuInfo {
             BufferedReader readingParentInput = new BufferedReader(parentInput);
             // read the child process output
             String cpuInfo;
-            cpuInfo = readingParentInput.readLine();
-            System.out.println(cpuInfo);
-        } catch (Exception cpuinformation) { // exception thrown
-            System.out.println("CpuInfo: Command failed! at cpuInformation()");
+            SystemDetails sysDetails = new SystemDetails();
+            String[] str;
+            while ((cpuInfo = readingParentInput.readLine()) != null) {
+                str = cpuInfo.split("\\s+");
+                if (cpuInfo.contains("Architecture")) {    
+                    sysDetails.setSYSTEM_TYPE(str[1]);
+                } else if (cpuInfo.contains("Byte Order")) {
+                    sysDetails.setBYTE_ORDER(str[2]+" "+str[3]);
+                } else if (cpuInfo.contains("Model name")) {
+                    String name=str[3];
+                    for(int count=4;count<str.length;count++)
+                        name=name+str[count];
+                    sysDetails.setPROCESSOR(name);
+                }
+            }
+           
+            LOGGER.debug("CpuInfo: cpuInformation(): ends");
+            return sysDetails;
+
+        } catch (Exception ex) { // exception thrown
+            System.out.println("CpuInfo: Command failed! at cpuInformation()" + ex.getMessage());
+            return null;
         }
-        LOGGER.debug("CpuInfo: cpuInformation(): ends");
-        return status;
+
     }
 
     /**
@@ -735,8 +753,7 @@ public class CpuInfo {
             //System.out.println("Command failed!");
             return null;
         }
-        
-       
+
     }
 
     /**

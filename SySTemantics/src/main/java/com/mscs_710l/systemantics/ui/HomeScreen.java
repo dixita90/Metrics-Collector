@@ -13,6 +13,7 @@ import com.mscs_710l.systemantics.pojo.FreeMemory;
 import com.mscs_710l.systemantics.pojo.IOStats;
 import com.mscs_710l.systemantics.pojo.NetworkStats;
 import com.mscs_710l.systemantics.pojo.ProcessInfo;
+import com.mscs_710l.systemantics.pojo.SystemDetails;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
 import java.util.List;
@@ -142,6 +143,7 @@ public class HomeScreen extends Application {
                     break;
                 case 3:
                     tab.setText("System Details");
+                    SystemDetails sd=c.cpuInformation();
 
                     GridPane grid = new GridPane();
                     grid.setAlignment(Pos.CENTER);
@@ -158,20 +160,23 @@ public class HomeScreen extends Application {
                     Label lblSysType = new Label("System Type:");
                     grid.add(lblSysType, 0, 2);
 
-                    Label lblSysTypeVal = new Label("64 bit OS");
+                    Label lblSysTypeVal=new Label();
+                    lblSysTypeVal.setText(sd.getSYSTEM_TYPE());
                     grid.add(lblSysTypeVal, 1, 2);
 
                     Label lblProcessor = new Label("Procesor:");
                     grid.add(lblProcessor, 0, 3);
 
-                    Label lblProcessorVal = new Label("i5");
+                    Label lblProcessorVal = new Label();
+                    lblProcessorVal.setText(sd.getPROCESSOR());
                     grid.add(lblProcessorVal, 1, 3);
 
-                    Label lblRAM = new Label("Installed Memory (RAM)");
-                    grid.add(lblRAM, 0, 4);
+                    Label lblByteOrder = new Label("Byte Order");
+                    grid.add(lblByteOrder, 0, 4);
 
-                    Label lblRAMVal = new Label("6.00 GB");
-                    grid.add(lblRAMVal, 1, 4);
+                    Label lblByteOrderVal = new Label();
+                    lblByteOrderVal.setText(sd.getBYTE_ORDER());
+                    grid.add(lblByteOrderVal, 1, 4);
 
                     tab.setContent(grid);
                     break;
