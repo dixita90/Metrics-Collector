@@ -49,7 +49,8 @@ public class CpuInfo {
      * is passed to a buffered reader. Necessary data is displayed.
      *
      * @param cmd
-     * @returns status
+     * @return processInfoList: Details regarding CPU processes.
+     *
      */
     public List<ProcessInfo> getCpu(String cmd) {
         LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : starts");
@@ -66,17 +67,16 @@ public class CpuInfo {
                     cpuInfo = input.readLine();
                     cpuStatArray.add(cpuInfo);
                 }
+                //The CPU stats are split individually and stored in an processInfoList.
                 processInfoList = setProcessSats(cpuStatArray);
                 systemanticsDb = new SystemanticsDb();
                 status = systemanticsDb.saveProcessInfo(processInfoList);
-                //System.out.println(status);
             } else {
                 LOGGER.error("invalid shell command");
             }
             LOGGER.debug("CpuInfo: Fetching CpuInfo, getCpu() : ends");
             return processInfoList;
-        } catch (Exception cpuinfo) { // exception thrown
-            //System.out.println("Command failed!");
+        } catch (Exception cpuinfo) {
             LOGGER.error("exception occured at getCpu() " + cpuinfo.getMessage());
             return null;
         }
@@ -85,8 +85,13 @@ public class CpuInfo {
     /**
      * setProcessSats
      *
+     * This method is responsible for fetching the data obtained from the top
+     * command. The data is refined accordingly by removing spaces between data
+     * and replacing the spaces with a comma. Finally the values are assigned to
+     * their member variables of the processInfo class.
+     *
      * @param array
-     * @returns processInfoList
+     * @return processInfoList:contains Details regarding CPU processes.
      */
     private List<ProcessInfo> setProcessSats(List<String> array) {
         LOGGER.debug("CpuInfo:  setProcessStats(): Starts");
@@ -94,6 +99,7 @@ public class CpuInfo {
         try {
             for (int i = 10; i < array.size(); i++) {
                 String val = array.get(i);
+                //The replace function will eliminate spaces and seperates elements with comma.
                 val = val.replace(" ", ",");
                 val = val.replace(",,", ",");
                 val = val.replace(",,", ",");
@@ -109,73 +115,84 @@ public class CpuInfo {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Sets PID.
                         pInfo.setPI_PID(Integer.parseInt(processValues[j]));
                     }
                     if (j % processValues.length == 1) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //USER is set.
                         pInfo.setPI_Username(processValues[j]);
                     }
                     if (j % processValues.length == 2) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting Prioritys.
                         pInfo.setPI_Priority(processValues[j]);
                     }
                     if (j % processValues.length == 3) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting PI_NI values.
                         pInfo.setPI_Nice(Integer.parseInt(processValues[j]));
                     }
                     if (j % processValues.length == 4) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting PI_VIRT values.
                         pInfo.setPI_Virtual(Integer.parseInt(processValues[j]));
                     }
                     if (j % processValues.length == 5) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting RES values.
                         pInfo.setPI_Res(processValues[j]);
                     }
                     if (j % processValues.length == 6) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting SHR values.
                         pInfo.setPI_Shared(Integer.parseInt(processValues[j]));
                     }
                     if (j % processValues.length == 7) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting S values.
                         pInfo.setPI_Status(processValues[j]);
                     }
                     if (j % processValues.length == 8) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting %CPU values.
                         pInfo.setPI_PerctCpuUsage(Double.parseDouble(processValues[j]));
                     }
                     if (j % processValues.length == 9) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting %MEM values.
                         pInfo.setPI_PerctMemUsage(Double.parseDouble(processValues[j]));
                     }
                     if (j % processValues.length == 10) {
-                        //java.sql.Time time = java.sql.Time.valueOf(processValues[j]);
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting TIME+ values.
                         pInfo.setPI_TIME(processValues[j]);
                     }
                     if (j % processValues.length == 11) {
                         if (processValues[0].equals("")) {
                             j = j + 1;
                         }
+                        //Setting COMMAND values.
                         pInfo.setPI_Command(processValues[j]);
                     }
                 }
@@ -191,13 +208,14 @@ public class CpuInfo {
     /**
      * memoryStats
      *
-     * This function accepts a shell command and executes it during runtime, in
-     * this particular case Memory statistics are obtained, command is executed
-     * and the corresponding data is passed to a buffered reader. Necessary data
-     * is displayed.
+     * This function accepts a shell command "free -m" and executes it during
+     * runtime, in this particular case Memory statistics are obtained, command
+     * is executed and the corresponding data is passed to a buffered reader.
+     * Necessary data is displayed.
      *
      * @param cmd
-     * @returns status
+     * @return fmList: Values from FreeMemory,which has details regarding memory
+     * statistics are passes into a list and returned.
      */
     public List<FreeMemory> memoryStats(String cmd) {
         LOGGER.debug("CpuInfo:  memoryStats(): Starts");
@@ -217,17 +235,15 @@ public class CpuInfo {
             int i = 0;
             while ((cpuInfo = readingParentInput.readLine()) != null) {
                 array[i] = cpuInfo;
-                //System.out.println(cpuInfo);
                 i++;
             }
+            //Details regarding memory are passes into fmList and returned.
             List fmList = setvalues(array);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveFreeMemory(fmList);
             LOGGER.debug("Class CpuInfo:  memoryStats(): ends");
-            //System.out.println(status);
             return fmList;
         } catch (Exception memorystats) { // exception thrown
-            //System.out.println("Command failed!");
             LOGGER.error("error occured at memoryStats()" + memorystats.getMessage());
             return null;
         }
@@ -236,13 +252,19 @@ public class CpuInfo {
     /**
      * setvalues
      *
+     * This method is responsible for fetching the data obtained from the "free
+     * -m" command. The data is refined accordingly by removing spaces between
+     * data and replacing the spaces with a comma. Finally the values are
+     * assigned to their member variables of the FreeMemory class.
+     *
      * @param array
-     * @returns fmList
+     * @return fmList: contains a list regarding Memory statistics.
      */
     private static List<FreeMemory> setvalues(String[] array) {
         LOGGER.debug("Class CpuInfo:  setvalues(): Start");
         List fmList = new ArrayList();
         for (int i = 1; i < array.length; i++) {
+            //The replace function will eliminate spaces and seperates elements with comma.
             array[i] = array[i].replace(" ", ",");
             array[i] = array[i].replace(",,", ",");
             array[i] = array[i].replace(",,", ",");
@@ -250,24 +272,31 @@ public class CpuInfo {
             array[i] = array[i].replace(",,", ",");
             String memoryValues[] = array[i].split(",");
             FreeMemory fm = new FreeMemory();
+            //7 outputs are set after using the "free" command.
             for (int j = 0; j < memoryValues.length; j++) {
-                if (j % 7 == 0) {
-
+                if (j % memoryValues.length == 0) {
+                    //Name is set.
                     fm.setName(memoryValues[j]);
                 }
-                if (j % 7 == 1) {
+                if (j % memoryValues.length == 1) {
+                    //The amount of total memory present is set.
                     fm.setTotal(Integer.parseInt(memoryValues[j]));
                 }
-                if (j % 7 == 2) {
+                if (j % memoryValues.length == 2) {
+                    // Value of Used memory is set.
                     fm.setUsed(Integer.parseInt(memoryValues[j]));
                 }
-                if (j % 7 == 4) {
+                // (j % memoryValues.length == 3)case is not used, as we are not storing free memory statistics.
+                if (j % memoryValues.length == 4) {
+                    //Shared memory is set.
                     fm.setShared(Integer.parseInt(memoryValues[j]));
                 }
-                if (j % 7 == 5) {
+                if (j % memoryValues.length == 5) {
+                    //value of buffer size is set
                     fm.setBuff_cache(Integer.parseInt(memoryValues[j]));
                 }
-                if (j % 7 == 6) {
+                if (j % memoryValues.length == 6) {
+                    //value of cached memory is set. 
                     fm.setAvailable(Integer.parseInt(memoryValues[j]));
                 }
             }
@@ -688,20 +717,21 @@ public class CpuInfo {
             SystemDetails sysDetails = new SystemDetails();
             String[] str;
             while ((cpuInfo = readingParentInput.readLine()) != null) {
-              System.out.println(cpuInfo);
+                System.out.println(cpuInfo);
                 str = cpuInfo.split("\\s+");
-                if (cpuInfo.contains("Architecture")) {    
+                if (cpuInfo.contains("Architecture")) {
                     sysDetails.setSYSTEM_TYPE(str[1]);
                 } else if (cpuInfo.contains("Byte Order")) {
-                    sysDetails.setBYTE_ORDER(str[2]+" "+str[3]);
+                    sysDetails.setBYTE_ORDER(str[2] + " " + str[3]);
                 } else if (cpuInfo.contains("Model name")) {
-                    String name=str[3];
-                    for(int count=4;count<str.length;count++)
-                        name=name+str[count];
+                    String name = str[3];
+                    for (int count = 4; count < str.length; count++) {
+                        name = name + str[count];
+                    }
                     sysDetails.setPROCESSOR(name);
                 }
             }
-                        
+
             LOGGER.debug("CpuInfo: cpuInformation(): ends");
             return sysDetails;
 
