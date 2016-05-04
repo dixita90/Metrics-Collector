@@ -144,17 +144,17 @@ public class HomeScreen extends Application {
                 case 3:
                     tab.setText("System Details");
                     SystemDetails sd=c.cpuInformation();
-
+                    String sysName = System.getenv("HOSTNAME");
+                    String name[] = sysName.replace(".", ",").split(",");
                     GridPane grid = new GridPane();
                     grid.setAlignment(Pos.CENTER);
                     grid.setHgap(10);
                     grid.setVgap(10);
-
                     grid.setPadding(new Insets(25, 25, 25, 25));
                     Label lblCompName = new Label("Computer Name:");
                     grid.add(lblCompName, 0, 1);
 
-                    Label lblCompNameVal = new Label("DIXITA_PC");
+                    Label lblCompNameVal = new Label(name[0]);
                     grid.add(lblCompNameVal, 1, 1);
 
                     Label lblSysType = new Label("System Type:");
@@ -302,7 +302,7 @@ public class HomeScreen extends Application {
             TableColumn commandCol = new TableColumn("Command");
             commandCol.setCellValueFactory(
                     new PropertyValueFactory<ProcessInfo, String>("PI_Command"));
-
+            
             tblProcessInfo.getColumns().addAll(ppidCol, usernameCol,
                     priorityCol, niceCol, virtualCol, resCol, sharedCol,
                     statusCol, prctCpuUsageCol, prctMemUsageCol, timeCol, commandCol);
@@ -340,7 +340,7 @@ public class HomeScreen extends Application {
             TableColumn nStatus = new TableColumn("Status");
             nStatus.setCellValueFactory(
                     new PropertyValueFactory<NetworkStats, String>("NI_Status"));
-
+            
             tblNetStats.getColumns().addAll(npidCol, nProtocolCol,nPrgCol,
                     nUserCol, nBWSentCol, nBWReceivedCol, nStatus);
 
@@ -370,7 +370,7 @@ public class HomeScreen extends Application {
             TableColumn freeMemBuffCacheCol = new TableColumn("Buffer Cache");
             freeMemBuffCacheCol.setCellValueFactory(
                     new PropertyValueFactory<FreeMemory, Integer>("buff_cache"));
-
+            
             tblFreeMemory.getColumns().addAll(freeMemNameCol, freeMemTotCol,
                     freeMemUsedMemCol, freeMemSharedCol, freeMemBuffCacheCol);
 

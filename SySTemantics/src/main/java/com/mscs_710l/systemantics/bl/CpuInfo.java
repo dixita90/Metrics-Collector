@@ -65,7 +65,6 @@ public class CpuInfo {
                 for (int i = 0; i < input.read(); i++) {
                     cpuInfo = input.readLine();
                     cpuStatArray.add(cpuInfo);
-                    System.out.println(cpuInfo);
                 }
                 processInfoList = setProcessSats(cpuStatArray);
                 systemanticsDb = new SystemanticsDb();
@@ -689,6 +688,7 @@ public class CpuInfo {
             SystemDetails sysDetails = new SystemDetails();
             String[] str;
             while ((cpuInfo = readingParentInput.readLine()) != null) {
+              System.out.println(cpuInfo);
                 str = cpuInfo.split("\\s+");
                 if (cpuInfo.contains("Architecture")) {    
                     sysDetails.setSYSTEM_TYPE(str[1]);
@@ -701,7 +701,7 @@ public class CpuInfo {
                     sysDetails.setPROCESSOR(name);
                 }
             }
-           
+                        
             LOGGER.debug("CpuInfo: cpuInformation(): ends");
             return sysDetails;
 
