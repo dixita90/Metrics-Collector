@@ -73,7 +73,7 @@ public class HomeScreen extends Application {
   //command to access network statistics.
   private static final String CMDNETSTATTCP = "netstat -e -p -at";
   //command to access network statistics.
-  private static final String CMDNETSTATUDP = "netstat -au";
+  private static final String CMDNETSTATUDP = "netstat -au -e -p";
   //command to access IO statistics.
   private static final String CMDIOSTAT = "iostat -d -N";
 

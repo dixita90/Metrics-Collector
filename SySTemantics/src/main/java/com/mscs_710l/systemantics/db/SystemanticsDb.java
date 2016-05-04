@@ -28,6 +28,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,13 +149,17 @@ public class SystemanticsDb {
             LOGGER.debug("SystemanticsDb: saveProcessInfo(): Starts");
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
+            SimpleDateFormat dateFormat = new  SimpleDateFormat("yyyy-mm-dd HH:MM");
+            Date date = new Date();
+          String d = dateFormat.format(date);
+//            String d = date.toString();
             for (int i = 0; i < processInfosList.size(); i++) {
                 ProcessInfo processInfo = processInfosList.get(i);
                 //...................
                 String query = "INSERT INTO tblProcessInfo(PI_PID,PI_Username,PI_Priority,"
                         + "PI_Nice,PI_Virtual,PI_Res,PI_Shared,PI_Status,"
-                        + "PI_PerctCpuUsage,PI_PerctMemUsage,PI_TIME,PI_Command)"
-                        + "values(?,?,?,?,?,?,?,?,?,?,?,?)";
+                        + "PI_PerctCpuUsage,PI_PerctMemUsage,PI_TIME,PI_Command,PI_Date)"
+                        + "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement pStmt = c.prepareStatement(query);
                 pStmt.setInt(1, processInfo.getPI_PID());
                 pStmt.setString(2, processInfo.getPI_Username());
@@ -167,6 +173,7 @@ public class SystemanticsDb {
                 pStmt.setDouble(10, processInfo.getPI_PerctMemUsage());
                 pStmt.setString(11, processInfo.getPI_TIME());
                 pStmt.setString(12, processInfo.getPI_Command());
+                pStmt.setString(13, d);
                 pStmt.executeUpdate();
             }
             msg = "Success";

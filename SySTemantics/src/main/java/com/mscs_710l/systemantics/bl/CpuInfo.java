@@ -92,7 +92,7 @@ public class CpuInfo {
         LOGGER.debug("CpuInfo:  setProcessStats(): Starts");
         List<ProcessInfo> processInfoList = new ArrayList<>();
         try {
-            for (int i = 10; i < array.size(); i++) {
+            for (int i = 6; i < array.size(); i++) {
                 String val = array.get(i);
                 val = val.replace(" ", ",");
                 val = val.replace(",,", ",");
@@ -547,7 +547,12 @@ public class CpuInfo {
                 networkStat.add(cpuInfo);
                 //System.out.println(cpuInfo);
             }
-            List vMList = setNetworkStats(networkStat);
+            List vMList;
+            if("netstat -e -p -at".equals(cmd)){
+             vMList = setNetworkStats(networkStat);
+            }else{
+              vMList = setUdpNetworkStats(networkStat);
+            }
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveNetworkStats(vMList);
             LOGGER.debug("CpuInfo: networkStats(): ends");
@@ -592,12 +597,6 @@ public class CpuInfo {
                     if ("cp6".equals(name)) {
                         protocolName = "tcp6";
                     }
-                    if ("dp".equalsIgnoreCase(name)) {
-                        protocolName = "udp";
-                    }
-                    if ("dp6".equals(name)) {
-                        protocolName = "udp6";
-                    }
                     netStat.setNI_Protocal(protocolName);
                 }
                 if (j % networkStat.length == 1) {
@@ -613,6 +612,62 @@ public class CpuInfo {
                     netStat.setNI_User(networkStat[j]);
                 }
                 if (j % networkStat.length == 8) {
+                    String temp[] = new String[3];
+                    temp[0] = networkStat[j];
+                    temp = temp[0].split("/");
+                    if (temp[0].equals("-")) {
+                        temp[0] = "0";
+                    }
+                    netStat.setNI_PID(Integer.parseInt(temp[0]));
+                    if (temp[0].equals("0")) {
+                        temp[0] = " ";
+                    }
+                    netStat.setNI_Program(temp[0]);
+                }
+            }
+            networkStatList.add(netStat);
+        }
+        LOGGER.debug("CpuInfo: setNetworkStats(): ends");
+        return networkStatList;
+    }
+private List<NetworkStats> setUdpNetworkStats(List<String> array) {
+        LOGGER.debug("CpuInfo: setNetworkStats(): starts");
+        List<NetworkStats> networkStatList = new ArrayList<>();
+        for (int i = 6; i < array.size(); i++) {
+            String val = array.get(i);
+            val = val.replace(" ", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            val = val.replace(",,", ",");
+            String networkStat[] = val.split(",");
+            NetworkStats netStat = new NetworkStats();
+            for (int j = 0; j < networkStat.length; j++) {
+                if (j % networkStat.length == 0) {
+                    String protocolName = null;
+                    String name = networkStat[j];
+                    if ("dp".equalsIgnoreCase(name)) {
+                        protocolName = "udp";
+                    }
+                    if ("dp6".equals(name)) {
+                        protocolName = "udp6";
+                    }
+                    netStat.setNI_Protocal(protocolName);
+                }
+                if (j % networkStat.length == 1) {
+                    netStat.setNI_BWReceived(Double.parseDouble(networkStat[j]));
+                }
+                if (j % networkStat.length == 2) {
+                    netStat.setNI_BWSent(Double.parseDouble(networkStat[j]));
+                }
+                if (j % networkStat.length == 5) {
+                    netStat.setNI_User(networkStat[j]);
+                }
+                if (j % networkStat.length == 7) {
                     String temp[] = new String[3];
                     temp[0] = networkStat[j];
                     temp = temp[0].split("/");
