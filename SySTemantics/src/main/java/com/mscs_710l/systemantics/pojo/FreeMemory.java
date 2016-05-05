@@ -10,14 +10,12 @@
  * Project
  * version: 1.0
  *
- * This file contains functions which implement ..........
+ * This file contains Set methods and Get methods
  */
 package com.mscs_710l.systemantics.pojo;
 
 /**
  * FreeMemory
- *
- * This class implements functions which...........
  */
 public class FreeMemory {
 
@@ -28,8 +26,7 @@ public class FreeMemory {
     int buff_cache;
 
     /**
-     * getName .......................
-     *
+     * getName
      * @return name
      */
     public String getName() {
@@ -38,7 +35,6 @@ public class FreeMemory {
 
     /**
      * setName
-     *
      * @param name
      */
     public void setName(String name) {
@@ -47,7 +43,6 @@ public class FreeMemory {
 
     /**
      * getTotal
-     *
      * @return total
      */
     public int getTotal() {
@@ -56,7 +51,6 @@ public class FreeMemory {
 
     /**
      * setTotal
-     *
      * @param total
      */
     public void setTotal(int total) {
@@ -65,7 +59,6 @@ public class FreeMemory {
 
     /**
      * getUsed
-     *
      * @return used
      */
     public int getUsed() {
@@ -74,7 +67,6 @@ public class FreeMemory {
 
     /**
      * setUsed
-     *
      * @param used
      */
     public void setUsed(int used) {
@@ -83,7 +75,6 @@ public class FreeMemory {
 
     /**
      * getShared
-     *
      * @return shared
      */
     public int getShared() {
@@ -92,7 +83,6 @@ public class FreeMemory {
 
     /**
      * setShared
-     *
      * @param shared
      */
     public void setShared(int shared) {
@@ -101,7 +91,6 @@ public class FreeMemory {
 
     /**
      * getBuff_cache
-     *
      * @return buff_cache
      */
     public int getBuff_cache() {
@@ -110,7 +99,6 @@ public class FreeMemory {
 
     /**
      * setBuff_cache
-     *
      * @param buff_cache
      */
     public void setBuff_cache(int buff_cache) {
@@ -119,7 +107,6 @@ public class FreeMemory {
 
     /**
      * getAvailable
-     *
      * @return available
      */
     public int getAvailable() {
@@ -128,7 +115,6 @@ public class FreeMemory {
 
     /**
      * setAvailable
-     *
      * @param available
      */
     public void setAvailable(int available) {

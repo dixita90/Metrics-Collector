@@ -10,14 +10,13 @@
  * Project
  * version: 1.0
  *
- * This file contains functions which implement ..............
+ * This file contains Set methods and Get methods.
  */
 package com.mscs_710l.systemantics.pojo;
 
 /**
  * VirtualMemoryStats
  *
- * This class implements functions which..........
  */
 public class VirtualMemoryStats {
 

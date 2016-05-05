@@ -10,14 +10,12 @@
  * Project
  * version: 1.0
  *
- * This file contains functions which implement system Metrics Data Base.
+ * This file contains Set methods and Get methods.
  */
 package com.mscs_710l.systemantics.pojo;
 
 /**
  * IOStats
- *
- * This class implements functions which..........
  */
 public class IOStats {
 
@@ -30,7 +28,6 @@ public class IOStats {
 
     /**
      * getIO_DISKNAME
-     *
      * @return IO_DISKNAME
      */
     public String getIO_DISKNAME() {
@@ -39,7 +36,6 @@ public class IOStats {
 
     /**
      * setIO_DISKNAME
-     *
      * @param IO_DISKNAME
      */
     public void setIO_DISKNAME(String IO_DISKNAME) {
@@ -48,7 +44,6 @@ public class IOStats {
 
     /**
      * getIO_TRANSFERPERSEC
-     *
      * @return IO_TRANSFERPERSEC
      */
     public double getIO_TRANSFERPERSEC() {
@@ -57,7 +52,6 @@ public class IOStats {
 
     /**
      * setIO_TRANSFERPERSEC
-     *
      * @param IO_TRANSFERPERSEC
      */
     public void setIO_TRANSFERPERSEC(double IO_TRANSFERPERSEC) {
@@ -66,7 +60,6 @@ public class IOStats {
 
     /**
      * getIO_KB_READS
-     *
      * @return IO_KB_READS
      */
     public double getIO_KB_READS() {
@@ -75,7 +68,6 @@ public class IOStats {
 
     /**
      * setIO_KB_READS
-     *
      * @param IO_KB_READS
      */
     public void setIO_KB_READS(double IO_KB_READS) {
@@ -84,7 +76,6 @@ public class IOStats {
 
     /**
      * getIO_KB_WRITES
-     *
      * @return IO_KB_WRITES
      */
     public double getIO_KB_WRITES() {
@@ -93,7 +84,6 @@ public class IOStats {
 
     /**
      * setIO_KB_WRITES
-     *
      * @param IO_KB_WRITES
      */
     public void setIO_KB_WRITES(double IO_KB_WRITES) {
@@ -102,7 +92,6 @@ public class IOStats {
 
     /**
      * getIO_TOTALBLOCKSREAD
-     *
      * @return IO_TOTALBLOCKSREAD
      */
     public double getIO_TOTALBLOCKSREAD() {
@@ -111,7 +100,6 @@ public class IOStats {
 
     /**
      * setIO_TOTALBLOCKSREAD
-     *
      * @param IO_TOTALBLOCKSREAD
      */
     public void setIO_TOTALBLOCKSREAD(double IO_TOTALBLOCKSREAD) {
@@ -120,7 +108,6 @@ public class IOStats {
 
     /**
      * getIO_TOATALBLOCKSWRITES
-     *
      * @return IO_TOATALBLOCKSWRITES
      */
     public double getIO_TOATALBLOCKSWRITES() {
@@ -129,7 +116,6 @@ public class IOStats {
 
     /**
      * setIO_TOATALBLOCKSWRITES
-     *
      * @param IO_TOATALBLOCKSWRITES
      */
     public void setIO_TOATALBLOCKSWRITES(double IO_TOATALBLOCKSWRITES) {

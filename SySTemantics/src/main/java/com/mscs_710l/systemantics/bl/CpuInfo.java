@@ -48,7 +48,7 @@ public class CpuInfo {
      * this particular case, top command is executed and the corresponding data
      * is passed to a buffered reader. Necessary data is displayed.
      *
-     * @param cmd
+     * @param cmd: top command is the passed parameter.
      * @return processInfoList: Details regarding CPU processes.
      *
      */
@@ -90,7 +90,7 @@ public class CpuInfo {
      * and replacing the spaces with a comma. Finally the values are assigned to
      * their member variables of the processInfo class.
      *
-     * @param array
+     * @param array: an array is passes so that CPU processes can be stored.
      * @return processInfoList:contains Details regarding CPU processes.
      */
     private List<ProcessInfo> setProcessSats(List<String> array) {
@@ -213,7 +213,7 @@ public class CpuInfo {
      * is executed and the corresponding data is passed to a buffered reader.
      * Necessary data is displayed.
      *
-     * @param cmd
+     * @param cmd: "free -m"
      * @return fmList: Values from FreeMemory,which has details regarding memory
      * statistics are passes into a list and returned.
      */
@@ -257,7 +257,7 @@ public class CpuInfo {
      * data and replacing the spaces with a comma. Finally the values are
      * assigned to their member variables of the FreeMemory class.
      *
-     * @param array
+     * @param array:an array is passes as parameter so that memory stats can be stored.
      * @return fmList: contains a list regarding Memory statistics.
      */
     private static List<FreeMemory> setvalues(String[] array) {
@@ -314,7 +314,7 @@ public class CpuInfo {
      * obtained, command is executed and the corresponding data is passed to a
      * buffered reader. Necessary data is displayed.
      *
-     * @param cmd
+     * @param cmd: "vmstat -t 1 6"
      * @return vMList: Values from VirtualMemoryStats,which has details
      * regarding Virtual memory statistics are passes into a list and returned.
      */
@@ -356,7 +356,9 @@ public class CpuInfo {
      * values are assigned to their member variables of the VirtualMemoryStats
      * class.
      *
-     * @param vMStatList
+     * @param vMStatList: a list containing virtual memory stats are passes as parameter so that the 
+     * values are assigned to their member variables.
+     * 
      * @returns virtualMemoryStatsList: Values from VirtualMemoryStats,which has
      * details regarding Virtual memory statistics are passes into a list and
      * returned.
@@ -455,15 +457,14 @@ public class CpuInfo {
     /**
      * virtualDiskStats
      *
-     * This function accepts a shell command "vmstat -t -d" and executes it during runtime, in
-     * this particular case Virtual Disk statistics are obtained, command is
-     * executed and the corresponding data is passed to a buffered reader.
-     * Necessary data is displayed.
+     * This function accepts a shell command "vmstat -t -d" and executes it
+     * during runtime, in this particular case Virtual Disk statistics are
+     * obtained, command is executed and the corresponding data is passed to a
+     * buffered reader. Necessary data is displayed.
      *
-     * @param cmd
-     * @return vDiskList: Values from VirtualDiskInfo,which has
-     * details regarding Virtual Disk statistics are passes into a list and
-     * returned.
+     * @param cmd:"vmstat -t -d"
+     * @return vDiskList: Values from VirtualDiskInfo,which has details
+     * regarding Virtual Disk statistics are passes into a list and returned.
      */
     public List<VirtualDiskInfo> virtualDiskStats(String cmd) {
         LOGGER.debug("CpuInfo: virtualDiskStats(): Start");
@@ -501,8 +502,10 @@ public class CpuInfo {
      * spaces between data and replacing the spaces with a comma. Finally the
      * values are assigned to their member variables of the VirtualDiskInfo
      * class.
+     *
+     * @param vDiskStatList: a list containing virtual Disk stats are passes as parameter so that the 
+     * values are assigned to their member variables.
      * 
-     * @param vDiskStatList
      * @return virtualDiskStatsList: Values from VirtualDiskInfo,which has
      * details regarding Virtual Disk statistics are passes into a list and
      * returned.
@@ -579,15 +582,14 @@ public class CpuInfo {
     /**
      * networkStats
      *
-     * This function accepts a shell command "netstat -e -p -at" and executes it during runtime, in
-     * this particular case Network statistics are obtained, command is executed
-     * and the corresponding data is passed to a buffered reader. Necessary data
-     * is displayed.
+     * This function accepts a shell command "netstat -e -p -at" and executes it
+     * during runtime, in this particular case Network statistics are obtained,
+     * command is executed and the corresponding data is passed to a buffered
+     * reader. Necessary data is displayed.
      *
-     * @param cmd
-     * @return vMList: Values from NetworkStats,which has
-     * details regarding Network statistics are passes into a list and
-     * returned.
+     * @param cmd: "netstat -e -p -at"
+     * @return vMList: Values from NetworkStats,which has details regarding
+     * Network statistics are passes into a list and returned.
      */
     public List<NetworkStats> networkStats(String cmd) {
         LOGGER.debug("CpuInfo: networkStats(): starts");
@@ -627,13 +629,12 @@ public class CpuInfo {
      * This method is responsible for fetching the data obtained from the
      * "netstat -e -p -at" command. The data is refined accordingly by removing
      * spaces between data and replacing the spaces with a comma. Finally the
-     * values are assigned to their member variables of the NetworkStats
-     * class.
-     * @param array
-     * 
-     * @return networkStatList: Values from NetworkStats,which has
-     * details regarding Network statistics are passes into a list and
-     * returned.
+     * values are assigned to their member variables of the NetworkStats class.
+     *
+     * @param array:an array is passed as an parameter so that the value of TCP network stats can be stored.
+     *
+     * @return networkStatList: Values from NetworkStats,which has details
+     * regarding TCP Network statistics are passes into a list and returned.
      */
     private List<NetworkStats> setNetworkStats(List<String> array) {
         LOGGER.debug("CpuInfo: setNetworkStats(): starts");
@@ -655,9 +656,11 @@ public class CpuInfo {
                 if (j % networkStat.length == 0) {
                     String protocolName = null;
                     String name = networkStat[j];
+                    // Hard coding the protocol name from cp to tcp, for better underatanding.
                     if ("cp".equalsIgnoreCase(name)) {
                         protocolName = "tcp";
                     }
+                    // Hard coding the protocol name from cp6 to tcp6, for better underatanding.
                     if ("cp6".equals(name)) {
                         protocolName = "tcp6";
                     }
@@ -675,6 +678,7 @@ public class CpuInfo {
                 if (j % networkStat.length == 6) {
                     netStat.setNI_User(networkStat[j]);
                 }
+                //Here the returned value comes in the form of PID and PRocess name so they are split.
                 if (j % networkStat.length == 8) {
                     String temp[] = new String[3];
                     temp[0] = networkStat[j];
@@ -695,6 +699,19 @@ public class CpuInfo {
         return networkStatList;
     }
 
+    /**
+     * setUdpNetworkStats
+     *
+     * This method is responsible for fetching the data obtained from the
+     * "netstat -au -e -p" command. The data is refined accordingly by removing
+     * spaces between data and replacing the spaces with a comma. Finally the
+     * values are assigned to their member variables of the NetworkStats class.
+     *
+     * @param array: an array is passed as an parameter so that the value of UDP network stats can be stored.
+     *
+     * @return networkStatList: Values from NetworkStats,which has details
+     * regarding UDP Network statistics are passes into a list and returned.
+     */
     private List<NetworkStats> setUdpNetworkStats(List<String> array) {
         LOGGER.debug("CpuInfo: setNetworkStats(): starts");
         List<NetworkStats> networkStatList = new ArrayList<>();
@@ -715,9 +732,11 @@ public class CpuInfo {
                 if (j % networkStat.length == 0) {
                     String protocolName = null;
                     String name = networkStat[j];
+                    // Hard coding the protocol name from dp to udp, for better underatanding.
                     if ("dp".equalsIgnoreCase(name)) {
                         protocolName = "udp";
                     }
+                    // Hard coding the protocol name from dp6 to udp6, for better underatanding.
                     if ("dp6".equals(name)) {
                         protocolName = "udp6";
                     }
@@ -753,43 +772,14 @@ public class CpuInfo {
     }
 
     /**
-     * discInformation
-     *
-     * This function accepts a shell command and executes it during runtime, in
-     * this particular case Disc Information and statistics are obtained,
-     * command is executed and the corresponding data is passed to a buffered
-     * reader. Necessary data is displayed.
-     *
-     * @returns status
-     */
-    public String discInformation() {
-        LOGGER.debug("CpuInfo: discInformation(): starts");
-        /* Get a list of all filesystem roots on this system */
-        String status = "";
-        File[] roots = File.listRoots();
-        /* For each filesystem root, print some debug */
-        for (File root : roots) {
-            System.out.println("\nDisc Statistics in...........................");
-            // System.out.println("File system root:"+root.getAbsolutePath());
-            System.out.println("Total space (Gigabytes):"
-                    + root.getTotalSpace() / 1073741824);
-            System.out.println("Free space (Gigabytes):" + root.getFreeSpace()
-                    / 1073741824);
-            System.out.println("Usable space (Gigabytes):"
-                    + root.getUsableSpace() / 1073741824);
-        }
-        LOGGER.debug("CpuInfo: discInformation(): ends");
-        return status;
-    }
-
-    /**
      * cpuInformation
      *
      * This function accepts a shell command and executes it during runtime, in
      * this particular case, "lscpu" command is executed and the corresponding
      * data is passed to a buffered reader. Necessary data is displayed.
      *
-     * @returns status
+     * @return sysDetails: Values from SystemDetails,which has details regarding
+     * CPU statistics are passes into a list and returned.
      */
     public SystemDetails cpuInformation() {
         LOGGER.debug("CpuInfo: cpuInformation(): starts");
@@ -822,27 +812,25 @@ public class CpuInfo {
                     sysDetails.setPROCESSOR(name);
                 }
             }
-
             LOGGER.debug("CpuInfo: cpuInformation(): ends");
             return sysDetails;
-
-        } catch (Exception ex) { // exception thrown
+        } catch (Exception ex) {
             System.out.println("CpuInfo: Command failed! at cpuInformation()" + ex.getMessage());
             return null;
         }
-
     }
 
     /**
      * iOStats
      *
-     * This function accepts a shell command and executes it during runtime, in
-     * this particular case IO statistics are obtained, command is executed and
-     * the corresponding data is passed to a buffered reader. Necessary data is
-     * displayed.
+     * This function accepts a shell command "iostat -d -N" and executes it
+     * during runtime, in this particular case IO statistics are obtained,
+     * command is executed and the corresponding data is passed to a buffered
+     * reader. Necessary data is displayed.
      *
-     * @param cmd
-     * @return
+     * @param cmd: "iostat -d -N"
+     * @return iOStatList:Values from iOStats,which has details regarding IO
+     * statistics are passes into a list and returned.
      */
     public List<IOStats> iOStats(String cmd) {
         LOGGER.debug("CpuInfo: iOStats(): Starts ");
@@ -858,30 +846,32 @@ public class CpuInfo {
             String cpuInfo;
             List<String> iOStats = new ArrayList();
             for (int i = 0; i < readingParentInput.read(); i++) {
-                //while((cpuInfo = readingParentInput.readLine())!=null){
                 cpuInfo = readingParentInput.readLine();
                 iOStats.add(cpuInfo);
-                //System.out.println(cpuInfo);
             }
             List iOStatList = setIOStats(iOStats);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveIOStats(iOStatList);
-            //System.out.println(status);
             LOGGER.debug("CpuInfo: iOStats(): Ends ");
             return iOStatList;
-        } catch (Exception iostats) { // exception thrown
+        } catch (Exception iostats) {
             LOGGER.error("CpuInfo: exception occured at iOStats()" + iostats.getMessage());
-            //System.out.println("Command failed!");
             return null;
         }
-
     }
 
     /**
      * setIOStats
      *
-     * @param list
-     * @returns ioStatsList
+     * This method is responsible for fetching the data obtained from the
+     * "iostat -d -N" command. The data is refined accordingly by removing
+     * spaces between data and replacing the spaces with a comma. Finally the
+     * values are assigned to their member variables of the NetworkStats class.
+     *
+     * @param list:an list is passed as an parameter so that the values of IO stats can be stored.
+     * 
+     * @return ioStatsList: Values from iOStats,which has details regarding IO
+     * statistics are passes into a list and returned.
      */
     private List<IOStats> setIOStats(List<String> list) {
         LOGGER.debug("CpuInfo: setIOStats(): starts");

@@ -68,11 +68,11 @@ public class HomeScreen extends Application {
   private static final String CMDMEMINFO = "cat /proc/meminfo";
   //command to access virtual memory statistics.
   private static final String CMDVMSTAT = "vmstat -t 1 6";
-  //command to access virtual memory statistics.
+  //command to access virtual Disc memory statistics.
   private static final String CMDVDISKSTATS = "vmstat -t -d";
-  //command to access network statistics.
+  //command to access network statistics for TCP.
   private static final String CMDNETSTATTCP = "netstat -e -p -at";
-  //command to access network statistics.
+  //command to access network statistics for UDP.
   private static final String CMDNETSTATUDP = "netstat -au -e -p";
   //command to access IO statistics.
   private static final String CMDIOSTAT = "iostat -d -N";

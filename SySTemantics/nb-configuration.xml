@@ -17,15 +17,18 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>true</org-netbeans-spi-editor-hints-projects.perProjectHintSettingsEnabled>
     </properties>
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+        <word>au</word>
         <word>Bhargav</word>
         <word>Chintapalli</word>
         <word>Dixita</word>
+        <word>iostat</word>
         <word>lscpu</word>
         <word>msg</word>
         <word>netstat</word>
         <word>Protocal</word>
         <word>setvalues</word>
         <word>Sheregar</word>
+        <word>stats</word>
         <word>Uppalapati</word>
         <word>vmstat</word>
     </spellchecker-wordlist>

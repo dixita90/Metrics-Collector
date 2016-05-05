@@ -9,15 +9,12 @@
  * course: MSCS 710
  * Project
  * version: 1.0
- *
- * This file contains functions which implement system Metrics Data Base.
  */
 package com.mscs_710l.systemantics.pojo;
 
 /**
  * MemoryInfo
- *
- * This class implements functions which..........
+ * 
  */
 public class MemoryInfo {
 
