@@ -30,7 +30,20 @@ public class ProcessInfo {
     double PI_PerctMemUsage;
     String PI_TIME;
     String PI_Command;
+    String Date;
 
+  public String getDate() {
+    return Date;
+  }
+/**
+ * 
+ * @param Date 
+ */
+  public void setDate(String Date) {
+    this.Date = Date;
+  }
+   
+    
     /**
      * getPI_PID
      * @return PI_PID

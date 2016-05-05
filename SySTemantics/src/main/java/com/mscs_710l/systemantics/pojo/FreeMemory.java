@@ -24,6 +24,7 @@ public class FreeMemory {
     int used;
     int shared;
     int buff_cache;
+    String Date;
 
     /**
      * getName
@@ -32,6 +33,20 @@ public class FreeMemory {
     public String getName() {
         return name;
     }
+/**
+ * 
+ * @return Date in string format
+ */
+  public String getDate() {
+    return Date;
+  }
+/**
+ * set the date
+ * @param Date 
+ */
+  public void setDate(String Date) {
+    this.Date = Date;
+  }
 
     /**
      * setName

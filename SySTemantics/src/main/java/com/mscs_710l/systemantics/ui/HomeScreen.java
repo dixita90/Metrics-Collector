@@ -161,6 +161,8 @@ public class HomeScreen extends Application {
 
                     tabNetwkInfo.setContent(tblNetStats);
                     tabPane.getTabs().add(tabNetwkInfo);
+                    SystemanticsDb db = new SystemanticsDb();
+                    db.retriveProcessData();
                     break;
                 case 3:
                     tabSysInfo.setText("System Details");

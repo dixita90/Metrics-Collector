@@ -26,9 +26,11 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
@@ -66,7 +68,7 @@ public class SystemanticsDb {
       boolean executeDBSCripts;
       executeDBSCripts = executeDBScripts(f, stmt);
     } catch (ClassNotFoundException | SQLException | IOException e) {
-      System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      LOGGER.error(e.getClass().getName() + ": " + e.getMessage());
       LOGGER.error("SystemanticsDb: exception occured at saveSystematic() " + e.getMessage());
     }
     LOGGER.info("SystemanticsDb: Opened database successfully");
@@ -97,7 +99,7 @@ public class SystemanticsDb {
       int i = stmt.executeUpdate(sb.toString());
       isScriptExecuted = true;
     } catch (IOException | SQLException e) {
-      System.err.println("SystemanticsDb: Failed to Execute" + aSQLScriptFilePath + ". The error is" + e.getMessage());
+      LOGGER.error("SystemanticsDb: Failed to Execute" + aSQLScriptFilePath + ". The error is" + e.getMessage());
     }
     LOGGER.debug("SystemanticsDb: executeDBScripts(): Ends");
     return isScriptExecuted;
@@ -116,12 +118,12 @@ public class SystemanticsDb {
       Class.forName("org.sqlite.JDBC");
       //..................................
       c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
-      Date date = new Date();
-      String d = dateFormat.format(date);
+//      Date date = new Date();
+//      String d = dateFormat.format(date);
       for (int i = 0; i < fmList.size(); i++) {
         FreeMemory fm = fmList.get(i);
         //..................
-       String query = "INSERT INTO tblFreeMemory(FM_NAME,FM_TOTAL,FM_USED,FM_SHARED,FM_BUFFCACHE,FM_AVAILABLE,FM_DATE)" + "values(?,?,?,?,?,?,?)";
+        String query = "INSERT INTO tblFreeMemory(FM_NAME,FM_TOTAL,FM_USED,FM_SHARED,FM_BUFFCACHE,FM_AVAILABLE,FM_DATE)" + "values(?,?,?,?,?,?,?)";
         PreparedStatement pStmt = c.prepareStatement(query);
         pStmt.setString(1, fm.getName());
         pStmt.setInt(2, fm.getTotal());
@@ -129,13 +131,13 @@ public class SystemanticsDb {
         pStmt.setInt(4, fm.getShared());
         pStmt.setInt(5, fm.getBuff_cache());
         pStmt.setInt(6, fm.getAvailable());
-        pStmt.setString(7, d);
+        pStmt.setString(7, fm.getDate());
         pStmt.executeUpdate();
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveFreeMemory()");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveFreeMemory()");
+      LOGGER.error(e.getMessage());
       msg = e.getMessage();
     }
     LOGGER.debug("SystemanticsDb: saveFreeMemory(): Ends");
@@ -182,8 +184,8 @@ public class SystemanticsDb {
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveProcessInfo()");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveProcessInfo()");
+      LOGGER.error(e.getMessage());
       msg = e.getMessage();
     }
     LOGGER.debug("SystemanticsDb: saveProcessInfo(): Ends");
@@ -223,8 +225,8 @@ public class SystemanticsDb {
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveNetworkStats()");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveNetworkStats()");
+      LOGGER.error(e.getMessage());
       msg = e.getMessage();
     }
     LOGGER.debug("SystemanticsDb: saveNetworkStats(): Ends");
@@ -275,8 +277,8 @@ public class SystemanticsDb {
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveVMStats()");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveVMStats()");
+      LOGGER.error(e.getMessage());
       msg = "not Success";
     }
     LOGGER.debug("SystemanticsDb: saveVMStats(): Ends");
@@ -320,8 +322,8 @@ public class SystemanticsDb {
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveVirtualDiskInfo()");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveVirtualDiskInfo()");
+      LOGGER.error(e.getMessage());
       msg = e.getMessage();
     }
     LOGGER.debug("SystemanticsDb: saveVirtualDiskInfo(): Ends");
@@ -359,11 +361,40 @@ public class SystemanticsDb {
       }
       msg = "Success";
     } catch (SQLException | ClassNotFoundException e) {
-      System.err.println("SystemanticsDb: an exception Occured at saveIOStats() ");
-      System.err.println(e.getMessage());
+      LOGGER.error("SystemanticsDb: an exception Occured at saveIOStats() ");
+      LOGGER.error(e.getMessage());
       msg = e.getMessage();
     }
     LOGGER.debug("SystemanticsDb: saveIOStats(): Ends");
     return msg;
+  }
+
+  public List<ProcessInfo> retriveProcessData() {
+    
+    ProcessInfo processInfo = new ProcessInfo();
+    List<ProcessInfo> processInfoslist = new ArrayList<>();
+    try {
+      LOGGER.debug("SystemanticsDb: retriveProcessData(): Starts");
+      Class.forName("org.sqlite.JDBC");
+      c = DriverManager.getConnection("jdbc:sqlite:Systemantics.db");
+      String query = "select PI_DATE, PI_PERCTCPUUSAGE ,PI_COMMAND from tblProcessInfo where "
+        + "PI_PERCTCPUUSAGE!=0 Limit 500";
+
+      PreparedStatement pStmt = c.prepareStatement(query);
+      ResultSet rs = pStmt.executeQuery();
+      while (rs.next()) {
+        processInfo.setDate(rs.getString(1));
+        processInfo.setPI_PerctCpuUsage(rs.getDouble(2));
+        processInfo.setPI_Command(rs.getString(3));
+      }
+      processInfoslist.add(processInfo);
+    } catch (SQLException | ClassNotFoundException e) {
+      LOGGER.error("SystemanticsDb: an exception Occured at saveIOStats() ");
+      LOGGER.error(e.getMessage());
+      msg = e.getMessage();
+      return null;
+    }
+    LOGGER.debug("SystemanticsDb: saveIOStats(): Ends");
+    return processInfoslist;
   }
 }
