@@ -19,6 +19,7 @@ import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import javafx.animation.AnimationTimer;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -517,11 +518,15 @@ public class HomeScreen extends Application {
     private void refreshData() {
         try {
 
-            timer.scheduleAtFixedRate(new TimerTask() {
-                //timer.schedule(new TimerTask() {
+            new AnimationTimer() {
+
                 @Override
-                public void run() {
-                   // Platform.runLater(new Runnable() {
+                public void handle(long now) {
+           // timer.scheduleAtFixedRate(new TimerTask() {
+                    //timer.schedule(new TimerTask() {
+                    //  @Override
+                    // public void run() {
+                    // Platform.runLater(new Runnable() {
 
 //                        @Override
 //                        public void run() {
@@ -534,7 +539,7 @@ public class HomeScreen extends Application {
                         List lst;
                         switch (i) {
                             case 0:
-                                        //tabProcessInfo.setText("CPU Info");
+                                //tabProcessInfo.setText("CPU Info");
                                 //tabProcessInfo.setClosable(false);
                                 lst = c.getCpu(CMDTOP);
                                 bindListToTable(lst, 0);
@@ -596,7 +601,7 @@ public class HomeScreen extends Application {
                     //        }
                     //});
                 }
-            }, 0, 3000);
+            }.start();
         } catch (Exception ex) {
             System.out.println("Exception in refreshData():" + ex.getMessage());
         }
