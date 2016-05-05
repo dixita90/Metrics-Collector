@@ -309,14 +309,14 @@ public class CpuInfo {
     /**
      * virtualMemoryStats
      *
-     * This function accepts a shell command and executes it during runtime, in
-     * this particular case Virtual Memory statistics are obtained, command is
-     * executed and the corresponding data is passed to a buffered reader.
-     * Necessary data is displayed.
+     * This function accepts a shell command "vmstat -t 1 6" and executes it
+     * during runtime, in this particular case Virtual Memory statistics are
+     * obtained, command is executed and the corresponding data is passed to a
+     * buffered reader. Necessary data is displayed.
      *
      * @param cmd
-     * @return
-     * @returns status
+     * @return vMList: Values from VirtualMemoryStats,which has details
+     * regarding Virtual memory statistics are passes into a list and returned.
      */
     public List<VirtualMemoryStats> virtualMemoryStats(String cmd) {
         LOGGER.debug("CpuInfo: virtualMemoryStats(): Start");
@@ -334,27 +334,32 @@ public class CpuInfo {
             for (int i = 0; i < readingParentInput.read(); i++) {
                 cpuInfo = readingParentInput.readLine();
                 vMStat.add(cpuInfo);
-                //System.out.println(cpuInfo);
             }
+            //Details regarding Virtual memory are passes into vMList and returned.
             List vMList = setVMStats(vMStat);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveVMStats(vMList);
-            //System.out.println(status);
             LOGGER.debug("CpuInfo: virtualMemoryStats(): ends");
             return vMList;
-        } catch (Exception virtualmemorystats) { // exception thrown
+        } catch (Exception virtualmemorystats) {
             LOGGER.debug("CpuInfo: error occured at virtualMemoryStats() " + virtualmemorystats.getMessage());
-            //System.out.println("Command failed!");
             return null;
         }
-
     }
 
     /**
      * setVMStats
      *
+     * This method is responsible for fetching the data obtained from the
+     * "vmstat -t 1 6" command. The data is refined accordingly by removing
+     * spaces between data and replacing the spaces with a comma. Finally the
+     * values are assigned to their member variables of the VirtualMemoryStats
+     * class.
+     *
      * @param vMStatList
-     * @returns virtualMemoryStatsList
+     * @returns virtualMemoryStatsList: Values from VirtualMemoryStats,which has
+     * details regarding Virtual memory statistics are passes into a list and
+     * returned.
      */
     private List<VirtualMemoryStats> setVMStats(List<String> vMStatList) {
         LOGGER.debug("CpuInfo: setVMStats(): starts");
@@ -373,54 +378,71 @@ public class CpuInfo {
             VirtualMemoryStats vms = new VirtualMemoryStats();
             for (int j = 0; j < vMValues.length; j++) {
                 if (j % vMValues.length == 0) {
+                    //Sets values of Virtual memory processes wait time
                     vms.setVM_PROCESS_WAIT_TIME(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 1) {
+                    //Sets values of Virtual memory processes IO wait time
                     vms.setVM_PROCESS_IO_WAIT_TIME(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 2) {
+                    //Sets values of SWapped output.
                     vms.setVM_SWPDOUT(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 3) {
+                    //Sets values of free memory.
                     vms.setVM_FREE(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 4) {
+                    //Sets values of VM Buffer
                     vms.setVM_BUFFER(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 5) {
+                    //Sets values of VM cache
                     vms.setVM_CACHE(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 6) {
+                    //Sets values of SWAP SI
                     vms.setVM_OSSWAPIN(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 7) {
+                    //Sets values of SWAP SO
                     vms.setVM_OSSWAPOUT(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 8) {
+                    //Sets values of IO block input.
                     vms.setVM_BLOCKREAD(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 9) {
+                    //Sets values of IO block output.
                     vms.setVM_BLOCKWRITE(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 10) {
+                    //Setting values of System Interrupt
                     vms.setVM_INTERRUPTS(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 11) {
+                    //Setting values of System Context Switches.
                     vms.setVM_CONTXTSWITCHES(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 12) {
+                    //Setting values of CPU non kernel mode.
                     vms.setVM_CPUNONKERNALMODE(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 13) {
+                    //Setting values of CPU kernel mode.
                     vms.setVM_CPUKERNALMODE(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 14) {
+                    //Setting values of CPU idle time.
                     vms.setVM_CPUIDELTIME(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 15) {
+                    //Setting values of CPU wait time.
                     vms.setVM_CPUWAITIO(Integer.parseInt(vMValues[j]));
                 }
                 if (j % vMValues.length == 16) {
+                    //Setting values of CPU time stolen.
                     vms.setVM_TIMESTOLENVM(Integer.parseInt(vMValues[j]));
                 }
             }
@@ -433,13 +455,15 @@ public class CpuInfo {
     /**
      * virtualDiskStats
      *
-     * This function accepts a shell command and executes it during runtime, in
+     * This function accepts a shell command "vmstat -t -d" and executes it during runtime, in
      * this particular case Virtual Disk statistics are obtained, command is
      * executed and the corresponding data is passed to a buffered reader.
      * Necessary data is displayed.
      *
      * @param cmd
-     * @return
+     * @return vDiskList: Values from VirtualDiskInfo,which has
+     * details regarding Virtual Disk statistics are passes into a list and
+     * returned.
      */
     public List<VirtualDiskInfo> virtualDiskStats(String cmd) {
         LOGGER.debug("CpuInfo: virtualDiskStats(): Start");
@@ -457,17 +481,14 @@ public class CpuInfo {
             for (int i = 0; i < readingParentInput.read(); i++) {
                 cpuInfo = readingParentInput.readLine();
                 vDiskStat.add(cpuInfo);
-                //System.out.println(cpuInfo);
             }
             List vDiskList = setVDiskStats(vDiskStat);
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveVirtualDiskInfo(vDiskList);
-            //System.out.println(status);
             LOGGER.debug("CpuInfo: virtualDiskStats(): ends");
             return vDiskList;
-        } catch (Exception e) { // exception thrown
+        } catch (Exception e) {
             LOGGER.error("CpuInfo: error occured at virtualDiskStats()" + e.getMessage());
-            //System.out.println("Command failed!");
             return null;
         }
     }
@@ -475,8 +496,16 @@ public class CpuInfo {
     /**
      * setVDiskStats
      *
+     * This method is responsible for fetching the data obtained from the
+     * "vmstat -t -d" command. The data is refined accordingly by removing
+     * spaces between data and replacing the spaces with a comma. Finally the
+     * values are assigned to their member variables of the VirtualDiskInfo
+     * class.
+     * 
      * @param vDiskStatList
-     * @returns virtualDiskStatsList
+     * @return virtualDiskStatsList: Values from VirtualDiskInfo,which has
+     * details regarding Virtual Disk statistics are passes into a list and
+     * returned.
      */
     private List<VirtualDiskInfo> setVDiskStats(List<String> vDiskStatList) {
         LOGGER.debug("CpuInfo: setVDiskStats(): starts");
@@ -550,13 +579,15 @@ public class CpuInfo {
     /**
      * networkStats
      *
-     * This function accepts a shell command and executes it during runtime, in
+     * This function accepts a shell command "netstat -e -p -at" and executes it during runtime, in
      * this particular case Network statistics are obtained, command is executed
      * and the corresponding data is passed to a buffered reader. Necessary data
      * is displayed.
      *
      * @param cmd
-     * @return
+     * @return vMList: Values from NetworkStats,which has
+     * details regarding Network statistics are passes into a list and
+     * returned.
      */
     public List<NetworkStats> networkStats(String cmd) {
         LOGGER.debug("CpuInfo: networkStats(): starts");
@@ -574,31 +605,35 @@ public class CpuInfo {
             for (int i = 0; i < readingParentInput.read(); i++) {
                 cpuInfo = readingParentInput.readLine();
                 networkStat.add(cpuInfo);
-                //System.out.println(cpuInfo);
             }
             List vMList;
-            if("netstat -e -p -at".equals(cmd)){
-             vMList = setNetworkStats(networkStat);
-            }else{
-              vMList = setUdpNetworkStats(networkStat);
+            if ("netstat -e -p -at".equals(cmd)) {
+                vMList = setNetworkStats(networkStat);
+            } else {
+                vMList = setUdpNetworkStats(networkStat);
             }
             systemanticsDb = new SystemanticsDb();
             status = systemanticsDb.saveNetworkStats(vMList);
             LOGGER.debug("CpuInfo: networkStats(): ends");
             return vMList;
-            //System.out.println(status);
-        } catch (Exception e) { // exception thrown
-            //System.out.println("Command failed!");
+        } catch (Exception e) {
             return null;
         }
-
     }
 
     /**
      * setNetworkStats
      *
+     * This method is responsible for fetching the data obtained from the
+     * "netstat -e -p -at" command. The data is refined accordingly by removing
+     * spaces between data and replacing the spaces with a comma. Finally the
+     * values are assigned to their member variables of the NetworkStats
+     * class.
      * @param array
-     * @returns networkStatList
+     * 
+     * @return networkStatList: Values from NetworkStats,which has
+     * details regarding Network statistics are passes into a list and
+     * returned.
      */
     private List<NetworkStats> setNetworkStats(List<String> array) {
         LOGGER.debug("CpuInfo: setNetworkStats(): starts");
@@ -659,7 +694,8 @@ public class CpuInfo {
         LOGGER.debug("CpuInfo: setNetworkStats(): ends");
         return networkStatList;
     }
-private List<NetworkStats> setUdpNetworkStats(List<String> array) {
+
+    private List<NetworkStats> setUdpNetworkStats(List<String> array) {
         LOGGER.debug("CpuInfo: setNetworkStats(): starts");
         List<NetworkStats> networkStatList = new ArrayList<>();
         for (int i = 6; i < array.size(); i++) {
