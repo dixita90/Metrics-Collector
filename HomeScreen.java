@@ -16,19 +16,31 @@ import com.mscs_710l.systemantics.pojo.ProcessInfo;
 import com.mscs_710l.systemantics.pojo.SystemDetails;
 import com.mscs_710l.systemantics.pojo.VirtualDiskInfo;
 import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
+import java.awt.event.ActionEvent;
+import java.beans.EventHandler;
+import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -40,7 +52,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.LoggerFactory;
 
@@ -112,7 +126,7 @@ public class HomeScreen extends Application {
 
         BorderPane borderPane = new BorderPane();
         int i = 0;
-        while (i < 4) {
+        while (i < 5) {
 
             CpuInfo c = new CpuInfo();
             List lst;
@@ -194,9 +208,43 @@ public class HomeScreen extends Application {
                     lblByteOrderVal.setText(sd.getBYTE_ORDER());
                     grid.add(lblByteOrderVal, 1, 4);
 
-                    
                     tabSysInfo.setContent(grid);
                     tabPane.getTabs().add(tabSysInfo);
+                    break;
+                case 4:
+                    Tab tabChart = new Tab();
+                    tabChart.setText("Chart");
+
+                    final CategoryAxis xAxis = new CategoryAxis();
+                    final NumberAxis yAxis = new NumberAxis();
+                    xAxis.setLabel("Time");
+                    yAxis.setLabel("Memory");
+                    final LineChart<String, Number> lineChart
+                            = new LineChart<>(xAxis, yAxis);
+
+                    lineChart.setTitle("CPU Usage");
+
+                    final XYChart.Series CPU_Stats = new XYChart.Series();
+                    CPU_Stats.setName("Process Statistics");
+
+                    new AnimationTimer() {
+                        CpuInfo c = new CpuInfo();
+
+                        @Override
+                        public void handle(long now) {
+                            List<ProcessInfo> lst = c.fetchingCpuUsage();
+                            for (ProcessInfo pinfo : lst) {
+
+                                CPU_Stats.getData().add(new XYChart.Data(pinfo.getDate(),
+                                        pinfo.getPI_PerctCpuUsage()));
+
+                                System.out.println(pinfo.getPI_PerctCpuUsage());
+                            }
+                        }
+                    }.start();
+                    lineChart.getData().addAll(CPU_Stats);
+                    tabChart.setContent(lineChart);
+                    tabPane.getTabs().add(tabChart);
                     break;
                 default:
                     break;
@@ -204,6 +252,7 @@ public class HomeScreen extends Application {
             i++;
         }
         refreshData();
+
         // bind to take available space
         borderPane.prefHeightProperty().bind(scene.heightProperty());
         borderPane.prefWidthProperty().bind(scene.widthProperty());
@@ -523,10 +572,10 @@ public class HomeScreen extends Application {
 //
 //                @Override
 //                public void handle(long now) {
-           // timer.scheduleAtFixedRate(new TimerTask() {
-                    timer.schedule(new TimerTask() {
-                      @Override
-                     public void run() {
+            // timer.scheduleAtFixedRate(new TimerTask() {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
                     // Platform.runLater(new Runnable() {
 
 //                        @Override
@@ -602,7 +651,7 @@ public class HomeScreen extends Application {
                     //        }
                     //});
                 }
-           }, 0, 3000);
+            }, 0, 3000);
         } catch (Exception ex) {
             System.out.println("Exception in refreshData():" + ex.getMessage());
         }
