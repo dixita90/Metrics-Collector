@@ -61,7 +61,7 @@ public class SyStemantics {
         cpuInfo.networkStats(CMDNETSTATTCP);
         cpuInfo.networkStats(CMDNETSTATUDP);
         cpuInfo.iOStats(CMDIOSTAT);
-        cpuInfo.discInformation();
+       // cpuInfo.discInformation();
         cpuInfo.cpuInformation();
         LOGGER.debug("SySTematics main(): ends");
     }

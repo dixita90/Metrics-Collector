@@ -62,7 +62,7 @@ public class SystemanticsDb {
       //........................
       String f = "/root/Projects/Metrics-Collector/SySTemantics/Scripts/CreateTableScripts.sql";
       stmt = c.createStatement();
-      System.out.println(stmt.getResultSet());
+//      System.out.println(stmt.getResultSet());
       boolean executeDBSCripts;
       executeDBSCripts = executeDBScripts(f, stmt);
     } catch (ClassNotFoundException | SQLException | IOException e) {
