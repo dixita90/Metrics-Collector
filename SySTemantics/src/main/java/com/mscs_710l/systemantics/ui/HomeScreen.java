@@ -19,7 +19,6 @@ import com.mscs_710l.systemantics.pojo.VirtualMemoryStats;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javafx.animation.AnimationTimer;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,7 +40,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javax.swing.SwingUtilities;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.LoggerFactory;
 
@@ -221,7 +219,7 @@ public class HomeScreen extends Application {
      */
     public static void main(String[] args) {
 
-        launch(args);
+        launch(null);
         PropertyConfigurator.configure("log4j.properties");
         LOGGER.debug("SySTematics main(): starts");
         CpuInfo cpuInfo = new CpuInfo();
@@ -519,89 +517,86 @@ public class HomeScreen extends Application {
     private void refreshData() {
         try {
 
-             new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-//            timer.scheduleAtFixedRate(new TimerTask() {
-//                //timer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-                    //Platform.runLater(new Runnable() {
-                   // SwingUtilities.invokeLater(new Runnable() {
-                     //   @Override
-                       // public void run() {
-                            System.out.print("I would be called every 2 seconds");
+            timer.scheduleAtFixedRate(new TimerTask() {
+                //timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                   // Platform.runLater(new Runnable() {
+
+//                        @Override
+//                        public void run() {
+                    System.out.print("I would be called every 2 seconds");
 //                    lblTimer.setText("Timer refreshed");
-                            int i = 0;
-                            while (i < 4) {
+                    int i = 0;
+                    while (i < 4) {
 
-                                CpuInfo c = new CpuInfo();
-                                List lst;
-                                switch (i) {
-                                    case 0:
+                        CpuInfo c = new CpuInfo();
+                        List lst;
+                        switch (i) {
+                            case 0:
                                         //tabProcessInfo.setText("CPU Info");
-                                        //tabProcessInfo.setClosable(false);
-                                        lst = c.getCpu(CMDTOP);
-                                        bindListToTable(lst, 0);
-                                        tabProcessInfo.setContent(tblProcessInfo);
-                                        tabPane.getTabs().add(tabProcessInfo);
-                                        break;
-                                    case 1:
-                                        //tabMemInfo.setText("Memory Info");
+                                //tabProcessInfo.setClosable(false);
+                                lst = c.getCpu(CMDTOP);
+                                bindListToTable(lst, 0);
+                                tabProcessInfo.setContent(tblProcessInfo);
+                                tabPane.getTabs().add(tabProcessInfo);
+                                break;
+                            case 1:
+                                //tabMemInfo.setText("Memory Info");
 
-                                        lst = c.memoryStats(CMDFREEMEMORY);
-                                        bindListToTable(lst, 11);
+                                lst = c.memoryStats(CMDFREEMEMORY);
+                                bindListToTable(lst, 11);
 
-                                        lst = c.virtualDiskStats(CMDVDISKSTATS);
-                                        bindListToTable(lst, 12);
+                                lst = c.virtualDiskStats(CMDVDISKSTATS);
+                                bindListToTable(lst, 12);
 
-                                        lst = c.virtualMemoryStats(CMDVMSTAT);
-                                        bindListToTable(lst, 13);
+                                lst = c.virtualMemoryStats(CMDVMSTAT);
+                                bindListToTable(lst, 13);
 
-                                        lst = c.iOStats(CMDIOSTAT);
-                                        bindListToTable(lst, 14);
+                                lst = c.iOStats(CMDIOSTAT);
+                                bindListToTable(lst, 14);
 
-                                        VBox vBox = new VBox();
-                                        vBox.getChildren().addAll(
-                                                tblFreeMemory, tblVmStatDisk, tblVmStat, tblIOStats);
-                                        tabMemInfo.setContent(vBox);
-                                        tabPane.getTabs().add(tabMemInfo);
-                                        break;
-                                    case 2:
-                                        //tabNetwkInfo.setText("Network Info");
+                                VBox vBox = new VBox();
+                                vBox.getChildren().addAll(
+                                        tblFreeMemory, tblVmStatDisk, tblVmStat, tblIOStats);
+                                tabMemInfo.setContent(vBox);
+                                tabPane.getTabs().add(tabMemInfo);
+                                break;
+                            case 2:
+                                //tabNetwkInfo.setText("Network Info");
 
-                                        lst = c.networkStats(CMDNETSTATTCP);
-                                        lst.addAll(c.networkStats(CMDNETSTATUDP));
-                                        bindListToTable(lst, 2);
+                                lst = c.networkStats(CMDNETSTATTCP);
+                                lst.addAll(c.networkStats(CMDNETSTATUDP));
+                                bindListToTable(lst, 2);
 
-                                        tabNetwkInfo.setContent(tblNetStats);
-                                        tabPane.getTabs().add(tabNetwkInfo);
-                                        break;
-                                    case 3:
-                                        //tabSysInfo.setText("System Details");
-                                        SystemDetails sd = c.cpuInformation();
-                                        String sysName = System.getenv("HOSTNAME");
-                                        String name[] = sysName.replace(".", ",").split(",");
+                                tabNetwkInfo.setContent(tblNetStats);
+                                tabPane.getTabs().add(tabNetwkInfo);
+                                break;
+                            case 3:
+                                //tabSysInfo.setText("System Details");
+                                SystemDetails sd = c.cpuInformation();
+                                String sysName = System.getenv("HOSTNAME");
+                                String name[] = sysName.replace(".", ",").split(",");
 
-                                        lblCompNameVal.setText(name[0]);
+                                lblCompNameVal.setText(name[0]);
 
-                                        lblSysTypeVal.setText(sd.getSYSTEM_TYPE());
+                                lblSysTypeVal.setText(sd.getSYSTEM_TYPE());
 
-                                        lblProcessorVal.setText(sd.getPROCESSOR());
+                                lblProcessorVal.setText(sd.getPROCESSOR());
 
-                                        lblByteOrderVal.setText(sd.getBYTE_ORDER());
-                                        tabSysInfo.setContent(grid);
-                                        tabPane.getTabs().add(tabSysInfo);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                i++;
-                            }
+                                lblByteOrderVal.setText(sd.getBYTE_ORDER());
+                                tabSysInfo.setContent(grid);
+                                tabPane.getTabs().add(tabSysInfo);
+                                break;
+                            default:
+                                break;
                         }
-                   // });
-                //}
-            }.start();
+                        i++;
+                    }
+                    //        }
+                    //});
+                }
+            }, 0, 3000);
         } catch (Exception ex) {
             System.out.println("Exception in refreshData():" + ex.getMessage());
         }
